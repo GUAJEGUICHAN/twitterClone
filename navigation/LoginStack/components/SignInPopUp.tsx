@@ -1,12 +1,14 @@
-import { Ionicons } from '@expo/vector-icons';
-import { CommonActions } from '@react-navigation/native';
 import React from 'react';
+
 import { Dimensions, TouchableOpacity } from 'react-native';
 
-import styled from 'styled-components/native'
+import { CommonActions } from '@react-navigation/native';
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
+import { Ionicons } from '@expo/vector-icons';
 
+import styled from 'styled-components/native';
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const Container = styled.View`
   position:absolute;
@@ -22,17 +24,17 @@ const Container = styled.View`
   border: 1px white solid;
   border-bottom-color: gray;
   border-right-color: gray;
-`
+`;
 
 const CloseButtonContainer = styled.View`
-  width:${`100%`};
+  width:${'100%'};
   padding-top:10px;
   padding-left:10px;
   z-index:1;
-`
+`;
 const CloseIcon = styled.Text`
   font-size:30px;
-`
+`;
 const LoginButton = styled.TouchableOpacity`
   margin-top:-20px;  
   width:60px;  
@@ -41,11 +43,11 @@ const LoginButton = styled.TouchableOpacity`
   align-self:flex-end;
   margin-right:20px;
   border-radius: 15px;
-`
+`;
 
 const LoginText = styled.Text`
   align-self:center;
-`
+`;
 
 const LogInTitle = styled.Text`
   position:absolute;
@@ -53,13 +55,13 @@ const LogInTitle = styled.Text`
   font-size:30px;
   font-weight:600;
   align-self:center;
-`
+`;
 
 const InputContainer = styled.View`
-  width:${`100%`};
+  width:${'100%'};
   margin-top:-25px;
   padding:30px;
-`
+`;
 
 const TextInputForSignIn = styled.TextInput`
   border: 1px solid white;
@@ -68,19 +70,18 @@ const TextInputForSignIn = styled.TextInput`
   margin: 12px;
   border-width: 1px;
   padding: 10px;
-`
+`;
 
-export default function SignInPopUp({ navigation, closeButton }) {
-
+export default function SignInPopUp({ navigation, closeButton }: any): React.ReactElement {
   return (
     <Container>
-      <CloseButtonContainer >
-        <TouchableOpacity onPress={() => { closeButton(false) }} >
+      <CloseButtonContainer>
+        <TouchableOpacity onPress={() => { closeButton(false); }}>
           <CloseIcon>
             <Ionicons
-              color='#788ea4'
+              color="#788ea4"
               size={30}
-              name='close'
+              name="close"
             />
           </CloseIcon>
         </TouchableOpacity>
@@ -90,21 +91,13 @@ export default function SignInPopUp({ navigation, closeButton }) {
       </LogInTitle>
       <InputContainer>
         <TextInputForSignIn
-          textContentType='emailAddress'
-          // onChangeText={onChangeNumber}
-          // value={number}
+          textContentType="emailAddress"
           placeholder="이메일"
-        // keyboardType="numeric"
-        >
-
-        </TextInputForSignIn>
+        />
         <TextInputForSignIn
-          textContentType='password'
-          // onChangeText={onChangeNumber}
-          // value={number}
+          textContentType="password"
           placeholder="비밀번호"
-        // keyboardType="numeric"
-        ></TextInputForSignIn>
+        />
       </InputContainer>
       <LoginButton onPress={() => {
         navigation.dispatch(
@@ -113,9 +106,10 @@ export default function SignInPopUp({ navigation, closeButton }) {
             routes: [
               { name: 'Home' },
             ],
-          })
+          }),
         );
-      }}  >
+      }}
+      >
         <LoginText>
           로그인
         </LoginText>

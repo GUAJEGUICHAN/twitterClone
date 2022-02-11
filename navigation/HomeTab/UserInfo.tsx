@@ -1,7 +1,12 @@
-import { CommonActions } from '@react-navigation/native';
 import React from 'react';
+
 import { Text, View } from 'react-native';
+
+import { CommonActions } from '@react-navigation/native';
+
 import styled from 'styled-components/native';
+
+import PropTypes from 'prop-types';
 
 const BlueButton = styled.TouchableOpacity`
   background-color:#1D9BF0;
@@ -14,7 +19,7 @@ const BlueButton = styled.TouchableOpacity`
   align-items:center;
   border-radius: 30px;
 align-self:center;
-`
+`;
 
 export default function UserInfo({ navigation }) {
   return (
@@ -27,9 +32,10 @@ export default function UserInfo({ navigation }) {
               routes: [
                 { name: 'Login' },
               ],
-            })
+            }),
           );
-        }}>
+        }}
+      >
         <Text>
           로그아웃
         </Text>
@@ -37,3 +43,10 @@ export default function UserInfo({ navigation }) {
     </View>
   );
 }
+
+UserInfo.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+    dispatch: PropTypes.func,
+  }).isRequired,
+};

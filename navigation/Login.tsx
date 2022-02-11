@@ -1,10 +1,11 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import { View, Text } from 'react-native'
-import Main from './LoginStack/Main'
+
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+import Main from './LoginStack/Main';
 import SignUp from './LoginStack/SignUp';
 
-const Stack = createNativeStackNavigator()
+const Stack = createNativeStackNavigator();
 
 export default function Login() {
   return (
@@ -16,22 +17,18 @@ export default function Login() {
       }}
     >
       <Stack.Screen
-        name='Main'
+        name="Main"
         component={Main}
 
       />
       <Stack.Screen
-        name='SignUp'
+        name="SignUp"
         component={SignUp}
         options={{
           headerTitle: '',
-          headerBackButtonMenuEnabled: true
-          // headerLeft: () => <Text>뒤로가기</Text>
+          headerBackButtonMenuEnabled: true,
         }}
       />
     </Stack.Navigator>
-    // <View>
-    //   <Text>Login Page</Text>
-    // </View>
   );
 }
