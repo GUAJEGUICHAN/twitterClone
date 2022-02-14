@@ -22,18 +22,17 @@ const ComponentContainer = styled.View`
 `;
 
 const ProfileImageContainer = styled.View`
-flex:2;
+  flex:2;
 /* background-color: red; */
 `;
 const ProfileImage = styled.View`
-background-color:skyblue;
-width:50px;
-height:50px;
-border-radius: 50px;
+  background-color:skyblue;
+  width:50px;
+  height:50px;
+  border-radius: 50px;
 `;
 const ContentContainer = styled.View`
-flex:8;
-/* background-color:blue; */
+  flex:8;
 `;
 const TweetContainer = styled.View`
 `;
@@ -44,7 +43,7 @@ const TweetHeader = styled.View`
   /* border-right-color: gray; */
 `;
 const TweetContent = styled.View`
-margin-top:10px;
+  margin-top:10px;
 `;
 const TweetTextContainer = styled.View`
   background-color:#E2E8EC;
@@ -52,7 +51,7 @@ const TweetTextContainer = styled.View`
   padding:10px;
 `;
 const TweetImageContainer = styled.View`
-margin:10px 0;
+  margin:10px 0;
 `;
 const TweetCommentContainer = styled.View`
   
@@ -73,6 +72,7 @@ export default function Tweet({
 }: TweetProps) {
   const [commentToggle, setCommentToggle] = useState(false);
   const [isEditMode, setEditMode] = useState(false);
+
   return (
     <ComponentContainer>
       <ProfileImageContainer>
@@ -110,8 +110,6 @@ export default function Tweet({
                     }}
                   >
                     {username}
-                    {' '}
-                    |
                     {' '}
                     {date}
                   </Text>
