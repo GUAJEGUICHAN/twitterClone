@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components/native";
-import { Dimensions, View, Text } from "react-native";
+import { View, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 const PopupBtn = styled.TouchableOpacity`
   width: 80px;
@@ -12,9 +13,10 @@ const PopupBtn = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
 `;
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const Upload = () => {
+  const navigation = useNavigation();
+
   return (
     <View
       style={{
@@ -25,7 +27,11 @@ const Upload = () => {
         zIndex: 5,
       }}
     >
-      <PopupBtn>
+      <PopupBtn
+        onPress={() => {
+          navigation.navigate("Upload", { screen: "Main" });
+        }}
+      >
         <Text>
           <Ionicons size={30} color="black" name="paper-plane" />
         </Text>
