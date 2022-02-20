@@ -10,7 +10,7 @@ const Container = styled.ScrollView`
   display:flex;
   flex-direction: column;
   flex:1;
-  background-color:skyblue;
+  background-color:white;
 `;
 
 export default function Tweets() {

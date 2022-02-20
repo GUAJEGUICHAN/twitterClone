@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import {
-  Pressable, Text, TextInput, TouchableOpacity, View,
+  Animated,
+  Pressable, Text, TextInput, View,
 } from 'react-native';
 
-import { Feather, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import {
+  Feather, Ionicons, MaterialCommunityIcons, SimpleLineIcons,
+} from '@expo/vector-icons';
 
 import styled from 'styled-components/native';
 
@@ -14,49 +17,79 @@ const ComponentContainer = styled.View`
   display:flex;
   flex-direction:row;
   background-color:white;
-  width:${'90%'};
-  margin-top:10px;
+  width:${'100%'};
   padding:20px;
-  border: 1px solid gray;
-  
+  border: 1px solid white;
+  border-bottom-color:#E2E8EC;
 `;
 
 const ProfileImageContainer = styled.View`
   flex:2;
-/* background-color: red; */
 `;
+
 const ProfileImage = styled.View`
   background-color:skyblue;
   width:50px;
   height:50px;
   border-radius: 50px;
 `;
+
 const ContentContainer = styled.View`
-  flex:8;
+  flex:9;
 `;
+
 const TweetContainer = styled.View`
 `;
+
 const TweetHeader = styled.View`
+  display:flex;
+  flex-direction: row;
+  justify-content:space-between;
+  align-items:center;
   border: 1px #E2E8EC solid;
-  border-bottom-color: gray;
-  padding-bottom:10px;
+  /* border-bottom-color: gray; */
+  /* padding-bottom:10px; */
   /* border-right-color: gray; */
 `;
-const TweetContent = styled.View`
+
+const Username = styled.Text`
+  font-size:16px;
+  font-weight:600;
+`;
+
+const Date = styled.Text`
+  font-size:16px;
+  /* font-weight:600; */
+`;
+
+const TweetContentContainer = styled.View`
   margin-top:10px;
 `;
+
+const TweetContent = styled.Text`
+  font-size:16px;
+`;
+
 const TweetTextContainer = styled.View`
   background-color:#E2E8EC;
   border-radius:10px;
   padding:10px;
 `;
+
 const TweetImageContainer = styled.View`
   margin:10px 0;
 `;
-const TweetCommentContainer = styled.View`
-  
+
+const TweetCommentContainer = styled.View`  
 `;
-const CommentContainer = styled.View``;
+
+const CommentContainer = styled.View`
+`;
+const AnimatedIconContainer = styled(Animated.createAnimatedComponent(View))`
+`;
+
+const CommentHeader = styled.Pressable`
+`
 
 type TweetProps = {
   profileImage: string,
@@ -68,10 +101,23 @@ type TweetProps = {
 }
 
 export default function Tweet({
-  profileImage = '', username, date, contentText, contentImage = '', comments,
+  profileImage = '',
+  username,
+  date,
+  contentText,
+  contentImage = '',
+  comments,
 }: TweetProps) {
   const [commentToggle, setCommentToggle] = useState(false);
   const [isEditMode, setEditMode] = useState(false);
+
+  const degree = useRef(new Animated.Value(0)).current;
+
+  const turnedDegree = degree.interpolate({
+    inputRange: [0, 90],
+    outputRange: ['0deg', '90deg'],
+    extrapolate: 'clamp',
+  });
 
   return (
     <ComponentContainer>
@@ -95,7 +141,9 @@ export default function Tweet({
                     alignContent: 'flex-start',
                     borderColor: 'black',
                     backgroundColor: '#E2E8EC',
-                    height: 100,
+                    height: 70,
+                    borderRadius: 10,
+                    padding: 10,
                   }}
                 />
               </View>
@@ -103,20 +151,16 @@ export default function Tweet({
             : (
               <TweetTextContainer>
                 <TweetHeader>
-                  <Text
-                    style={{
-                      fontWeight: '300',
-                      fontSize: 12,
-                    }}
-                  >
+                  <Username>
                     {username}
-                    {' '}
+                  </Username>
+                  <Date>
                     {date}
-                  </Text>
+                  </Date>
                 </TweetHeader>
-                <TweetContent>
-                  <Text>{contentText}</Text>
-                </TweetContent>
+                <TweetContentContainer>
+                  <TweetContent>{contentText}</TweetContent>
+                </TweetContentContainer>
               </TweetTextContainer>
             )}
           <TweetImageContainer>
@@ -153,14 +197,45 @@ export default function Tweet({
           </View>
         </TweetContainer>
         <CommentContainer>
-          <TouchableOpacity
+          <CommentHeader
             style={{
               marginVertical: 5,
             }}
-            onPress={() => { setCommentToggle((prev) => !prev); }}
+            onPress={() => {
+              setCommentToggle((prev) => !prev);
+              if (commentToggle) {
+                Animated.spring(degree, { toValue: 0, useNativeDriver: true }).start();
+              } else {
+                Animated.spring(degree, { toValue: 90, useNativeDriver: true }).start();
+              }
+            }}
           >
-            <Text>댓글</Text>
-          </TouchableOpacity>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+              }}
+            >
+              <AnimatedIconContainer
+                style={{
+                  transform: [{ rotateZ: turnedDegree }],
+                }}
+              >
+                <SimpleLineIcons
+                  name="arrow-right"
+                  size={12}
+                  color="skyblue"
+                />
+              </AnimatedIconContainer>
+              <Text
+                style={{
+                  marginLeft: 10,
+                }}
+              >
+                댓글
+              </Text>
+            </View>
+          </CommentHeader>
           {commentToggle ? (
             <TweetCommentContainer>
               {comments.map(({
@@ -197,7 +272,6 @@ export default function Tweet({
             </TweetCommentContainer>
           )
             : false}
-
         </CommentContainer>
       </ContentContainer>
     </ComponentContainer>
