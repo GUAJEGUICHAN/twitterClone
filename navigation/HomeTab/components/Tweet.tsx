@@ -89,7 +89,7 @@ const AnimatedIconContainer = styled(Animated.createAnimatedComponent(View))`
 `;
 
 const CommentHeader = styled.Pressable`
-`
+`;
 
 type TweetProps = {
   profileImage: string,
