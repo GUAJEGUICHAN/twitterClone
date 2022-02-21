@@ -27,7 +27,7 @@ const BackGround = styled.View`
 const Image = styled.Image`
   width: 130px;
   height: 130px;
-  border-radius: 100;
+  border-radius: 100px;
   background-color: rgba(255, 255, 255, 0.5);
   position: absolute;
   border: 4px solid white;

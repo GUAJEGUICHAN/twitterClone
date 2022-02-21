@@ -6,7 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 const PopupBtn = styled.TouchableOpacity`
   width: 80px;
   height: 80px;
-  border-radius: 100;
+  border-radius: 100px;
   background-color: #6baae8;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   justify-content: center;

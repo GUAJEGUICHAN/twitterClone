@@ -1,11 +1,9 @@
 import React from "react";
 
-import { Text, Dimensions } from "react-native";
+import { Text, View, Dimensions } from "react-native";
 import styled from "styled-components/native";
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+// const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 import Upload from "./components/Upload";
-
-import styled from 'styled-components/native';
 
 import { useQuery } from 'react-query';
 import { fetchAllPosts } from '../../service/api';
@@ -86,8 +84,6 @@ export default function Tweets() {
           /> */
         }
       </View>
-
-
       <Upload />
     </Container>
   );
