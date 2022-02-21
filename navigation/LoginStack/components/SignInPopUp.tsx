@@ -21,7 +21,7 @@ const Container = styled.View`
   border-color: black;
   top:${SCREEN_HEIGHT * 0.3}px;
   z-index: 1;
-  border: 1px white solid;
+  border: 1px white;
   border-bottom-color: gray;
   border-right-color: gray;
 `;
@@ -66,7 +66,7 @@ const InputContainer = styled.View`
 `;
 
 const TextInputForSignIn = styled.TextInput`
-  border: 1px solid white;
+  border: 1px  white;
   border-bottom-color: #1D9BF0;
   height: 40px;
   margin: 12px;

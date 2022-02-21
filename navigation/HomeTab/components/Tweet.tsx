@@ -20,7 +20,7 @@ const ComponentContainer = styled.View`
   background-color:white;
   width:${'100%'};
   padding:20px;
-  border: 1px solid white;
+  border: 1px white;
   border-bottom-color:#E2E8EC;
 `;
 
@@ -47,7 +47,7 @@ const TweetHeader = styled.View`
   flex-direction: row;
   justify-content:space-between;
   align-items:center;
-  border: 1px #E2E8EC solid;
+  border: 1px #E2E8EC ;
   /* border-bottom-color: gray; */
   /* padding-bottom:10px; */
   /* border-right-color: gray; */

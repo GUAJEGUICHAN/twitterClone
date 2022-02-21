@@ -30,7 +30,8 @@ const Image = styled.Image`
   border-radius: 100px;
   background-color: rgba(255, 255, 255, 0.5);
   position: absolute;
-  border: 4px solid white;
+  border-width: 4px;
+  border-color: white;
   top: 115px;
   left: 20px;
 `;
