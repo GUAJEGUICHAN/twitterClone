@@ -41,6 +41,8 @@ const TextInputContainer = styled.View`
   padding:40px;
 `;
 
+const TextInputBlueOutlined = styled.TextInput
+
 export default function SignUp({ navigation }) {
   return (
     <Container>
@@ -52,6 +54,18 @@ export default function SignUp({ navigation }) {
           mode="outlined"
           textContentType="emailAddress"
           label="Email"
+          activeOutlineColor="#1D9BF0"
+          activeUnderlineColor="#1D9BF0"
+          outlineColor="#1D9BF0"
+          style={{
+            marginBottom: 8,
+          }}
+        />
+        <TextInput
+          mode="outlined"
+          textContentType="name"
+          secureTextEntry
+          label="Username"
           activeOutlineColor="#1D9BF0"
           activeUnderlineColor="#1D9BF0"
           outlineColor="#1D9BF0"
