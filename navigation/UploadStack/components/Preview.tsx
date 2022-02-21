@@ -25,8 +25,8 @@ const ImageView = styled.View<{ isOne: boolean }>`
 
 const ImageWrapper = styled.View`
   position: relative;
-  width: 90%;
-  height: 90%;
+  width: 91%;
+  height: 91%;
 `;
 
 const ImageInstance = styled.Image`
@@ -35,7 +35,7 @@ const ImageInstance = styled.Image`
 
 const DelBtn = styled.TouchableOpacity`
   position: absolute;
-  top: 10;
+  top: 10px;
   right: 10px;
   box-shadow: 1px 1px 5px lightgray;
 `;

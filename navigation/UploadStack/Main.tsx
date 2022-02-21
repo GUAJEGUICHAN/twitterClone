@@ -26,7 +26,7 @@ const Message = styled.TextInput`
 const Image = styled.Image`
   width: 60px;
   height: 60px;
-  border-radius: 100;
+  border-radius: 100px;
 `;
 
 const BtnColumn = styled.View`
