@@ -1,9 +1,9 @@
-import React from "react";
-import styled from "styled-components/native";
-import { Text, View, Dimensions } from "react-native";
-import Upload from "./components/Upload";
+import React from 'react';
+import styled from 'styled-components/native';
+import { Dimensions } from 'react-native';
+import Upload from './components/Upload';
 
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const Container = styled.View`
   position: relative;
@@ -23,7 +23,7 @@ const SearchBar = styled.TextInput`
 export default function Search() {
   return (
     <Container>
-      <SearchBar placeholder="Search Twitter"></SearchBar>
+      <SearchBar placeholder="Search Twitter" />
       <Upload />
     </Container>
   );

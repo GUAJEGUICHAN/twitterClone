@@ -41,8 +41,6 @@ const TextInputContainer = styled.View`
   padding:40px;
 `;
 
-const TextInputBlueOutlined = styled.TextInput
-
 export default function SignUp({ navigation }) {
   return (
     <Container>

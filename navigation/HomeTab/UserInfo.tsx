@@ -1,16 +1,16 @@
-import React from "react";
+import React from 'react';
 
-import { Text, Dimensions } from "react-native";
+import { Text, Dimensions } from 'react-native';
 
-import { CommonActions } from "@react-navigation/native";
+import { CommonActions } from '@react-navigation/native';
 
-import styled from "styled-components/native";
+import styled from 'styled-components/native';
 
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
-import Upload from "./components/Upload";
+import Upload from './components/Upload';
 
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const Container = styled.View`
   position: relative;
@@ -60,18 +60,13 @@ const Name = styled.Text`
   color: black;
 `;
 
-const TweetList = styled.View`
-  background-color: lightgray;
-  height: 200px;
-`;
-
 export default function UserInfo({ navigation }) {
   return (
     <Container>
       <BackGround>
         <Image
           source={{
-            uri: "https://thumbnews.nateimg.co.kr/view610///news.nateimg.co.kr/orgImg/hm/2020/12/11/202012111655103390984_20201211165529_01.jpg",
+            uri: 'https://thumbnews.nateimg.co.kr/view610///news.nateimg.co.kr/orgImg/hm/2020/12/11/202012111655103390984_20201211165529_01.jpg',
           }}
         />
       </BackGround>
@@ -84,8 +79,8 @@ export default function UserInfo({ navigation }) {
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
-              routes: [{ name: "Login" }],
-            })
+              routes: [{ name: 'Login' }],
+            }),
           );
         }}
       >
