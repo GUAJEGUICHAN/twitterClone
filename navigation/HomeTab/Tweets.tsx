@@ -1,19 +1,23 @@
-import React from "react";
+import React from 'react';
 
-import { Text, View, Dimensions } from "react-native";
-import styled from "styled-components/native";
-// const { height: SCREEN_HEIGHT } = Dimensions.get("window");
-import Upload from "./components/Upload";
+import { Text, Dimensions, FlatList } from 'react-native';
 
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
+
+import styled from 'styled-components/native';
 import { fetchAllPosts } from '../../service/api';
 
 import Tweet from './components/Tweet';
+import Upload from './components/Upload';
 
-const Container = styled.ScrollView`
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+
+const Container = styled.View`
   display:flex;
   flex-direction: column;
-  flex:1;
+  /* flex:1; */
+  height:${SCREEN_HEIGHT}px;
+  /* height:844px; */
   background-color:white;
 `;
 
@@ -40,7 +44,9 @@ type PostProps = {
 }
 
 export default function Tweets() {
-  const { data, isLoading }: { data: any, isLoading: boolean } = useQuery<any>(['allPosts'], fetchAllPosts);
+  const { data: tweetData, isLoading, isRefetching: isRefetchingAllPosts }: { data: any, isLoading: boolean, isRefetching: boolean } = useQuery<any>(['allPosts'], fetchAllPosts);
+
+  const queryClient = useQueryClient();
 
   const TweetComments = [
     {
@@ -56,34 +62,45 @@ export default function Tweets() {
       content: '안녕하세요 트럼프',
     },
   ];
+
+  const onRefresh = React.useCallback(() => {
+    queryClient.refetchQueries(['allPosts']);
+  }, []);
+  const refreshing = isRefetchingAllPosts;
+
+  const renderItem = ({ item }: { item: PostProps }) => (
+    <Tweet
+      key={item.idx}
+      profileImage=""
+      username="오바마"
+      date={item.createdAt}
+      contentText={item.content}
+      comments={TweetComments}
+      contentImageList={item.postImages}
+    />
+  );
+
   return (
-    <Container>
-      <View
-        style={{
-          alignSelf: 'center',
-        }}
-      >
-        {isLoading ? <Text>로딩중</Text> : data.posts.map((tweet: PostProps) => (
-          <Tweet
-            key={tweet.idx}
-            profileImage=""
-            username="오바마"
-            date={tweet.createdAt}
-            contentText={tweet.content}
-            comments={TweetComments}
-            contentImageList={tweet.postImages}
+    <Container
+      style={{
+        flex: 1,
+        backgroundColor: 'gray',
+      }}
+    >
+      {isLoading
+        ? (<Text> 로딩중</Text>)
+        : (
+          <FlatList
+            style={{
+              flex: 1,
+            }}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            data={tweetData.posts}
+            renderItem={renderItem}
+            keyExtractor={(item) => `${item.idx}`}
           />
-        ))}
-        {/* <Tweet
-            profileImage=""
-            username="오바마"
-            date="2022/01/01"
-            contentText="새해복 많이 받으세요"
-            comments={TweetComments}
-            contentImageList="/asdf"
-          /> */
-        }
-      </View>
+        )}
       <Upload />
     </Container>
   );
