@@ -61,6 +61,18 @@ export default function SignUp({ navigation }) {
         />
         <TextInput
           mode="outlined"
+          textContentType="name"
+          secureTextEntry
+          label="Username"
+          activeOutlineColor="#1D9BF0"
+          activeUnderlineColor="#1D9BF0"
+          outlineColor="#1D9BF0"
+          style={{
+            marginBottom: 8,
+          }}
+        />
+        <TextInput
+          mode="outlined"
           textContentType="password"
           secureTextEntry
           label="Password"

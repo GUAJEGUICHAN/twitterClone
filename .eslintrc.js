@@ -4,42 +4,41 @@ module.exports = {
     es2021: true,
   },
   settings: {
-    "import/resolver": {
+    'import/resolver': {
       node: {
-        extensions: [".js", ".jsx", ".ts", ".tsx"],
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
       },
     },
   },
-  extends: ["plugin:react/recommended", "airbnb"],
-  parser: "@typescript-eslint/parser",
+  extends: ['plugin:react/recommended', 'airbnb'],
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
     },
-    ecmaVersion: "latest",
-    sourceType: "module",
+    ecmaVersion: 'latest',
+    sourceType: 'module',
   },
-  plugins: ["react", "@typescript-eslint"],
+  plugins: ['react', '@typescript-eslint'],
   rules: {
-    "react/jsx-filename-extension": [1, { extensions: [".ts", ".tsx"] }],
-    "import/extensions": [
-      "error",
-      "ignorePackages",
+    'react/jsx-filename-extension': [1, { extensions: ['.ts', '.tsx'] }],
+    'import/extensions': [
+      'error',
+      'ignorePackages',
       {
-        js: "never",
-        jsx: "never",
-        ts: "never",
-        tsx: "never",
+        js: 'never',
+        jsx: 'never',
+        ts: 'never',
+        tsx: 'never',
       },
     ],
-    "react/no-unstable-nested-components": [
-      "off" | "warn" | "error",
-      { allowAsProps: true | false },
+    'react/no-unstable-nested-components': [
+      'off',
+      { allowAsProps: true },
     ],
-    "global-require": 0,
-    "import/no-unresolved": ["error"],
-    "linebreak-style": ["error", "windows"],
-    allowTemplateLiterals: false,
-    quotes: [2, "double", { avoidEscape: false }],
+    'global-require': 0,
+    'import/no-unresolved': ['error'],
+    'linebreak-style': ['error', 'windows'],
+    allowTemplateLiterals: 0,
   },
 };

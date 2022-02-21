@@ -10,12 +10,12 @@ import SignInPopUp from './components/SignInPopUp';
 import TouchableBlurView from './components/TouchableBlurView';
 
 const Container = styled.View`
-width: ${'100%'};
-height:${'100%'};
-background-color:white;
-display: flex;
-flex-direction: column;
-align-items:center;
+  width: ${'100%'};
+  height:${'100%'};
+  background-color:white;
+  display: flex;
+  flex-direction: column;
+  align-items:center;
 `;
 
 const ButtonContainer = styled.View`  
@@ -24,8 +24,8 @@ const ButtonContainer = styled.View`
 `;
 
 const MainImage = styled.Image`
-margin-top:180px;
-margin-bottom:80px;
+  margin-top:180px;
+  margin-bottom:80px;
   width: 250px;
   height: 250px;
   aspect-ratio: 1.5;

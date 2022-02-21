@@ -21,7 +21,7 @@ const Container = styled.View`
   border-color: black;
   top:${SCREEN_HEIGHT * 0.3}px;
   z-index: 1;
-  border: 1px white solid;
+  border: 1px white;
   border-bottom-color: gray;
   border-right-color: gray;
 `;
@@ -32,9 +32,11 @@ const CloseButtonContainer = styled.View`
   padding-left:10px;
   z-index:1;
 `;
+
 const CloseIcon = styled.Text`
   font-size:30px;
 `;
+
 const LoginButton = styled.TouchableOpacity`
   margin-top:-20px;  
   width:60px;  
@@ -64,7 +66,7 @@ const InputContainer = styled.View`
 `;
 
 const TextInputForSignIn = styled.TextInput`
-  border: 1px solid white;
+  border: 1px  white;
   border-bottom-color: #1D9BF0;
   height: 40px;
   margin: 12px;
