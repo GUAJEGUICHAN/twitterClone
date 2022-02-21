@@ -1,6 +1,9 @@
-import React from 'react';
+import React from "react";
 
-import { Text, View } from 'react-native';
+import { Text, Dimensions } from "react-native";
+import styled from "styled-components/native";
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+import Upload from "./components/Upload";
 
 import styled from 'styled-components/native';
 
@@ -83,6 +86,9 @@ export default function Tweets() {
           /> */
         }
       </View>
+
+
+      <Upload />
     </Container>
   );
 }

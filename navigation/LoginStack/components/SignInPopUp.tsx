@@ -32,9 +32,11 @@ const CloseButtonContainer = styled.View`
   padding-left:10px;
   z-index:1;
 `;
+
 const CloseIcon = styled.Text`
   font-size:30px;
 `;
+
 const LoginButton = styled.TouchableOpacity`
   margin-top:-20px;  
   width:60px;  
