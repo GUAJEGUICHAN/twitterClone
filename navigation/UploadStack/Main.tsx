@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Text, TextInput } from "react-native";
+import { Text, Keyboard } from "react-native";
 import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
@@ -36,8 +36,10 @@ const BtnColumn = styled.View`
   height: 50px;
 `;
 
-const ImgBtn = styled.TouchableOpacity``;
-const SendBtn = styled(ImgBtn)`
+const ImgBtn = styled.TouchableOpacity<{ isDisabled: boolean }>`
+  opacity: ${(props) => (props.isDisabled ? `0.5` : `1`)};
+`;
+const SendBtn = styled.TouchableOpacity`
   padding: 5px 10px;
   background-color: #6baae8;
   border-radius: 20px;
@@ -45,7 +47,7 @@ const SendBtn = styled(ImgBtn)`
 
 const Main = () => {
   // const inputRef = useRef<null | HTMLInputElement>(null);
-  const [form, setForm] = useState(null);
+  const [form, setForm] = useState(0);
   const [image, setImage] = useState(null);
   const upload = async () => {
     try {
@@ -55,9 +57,9 @@ const Main = () => {
         aspect: [4, 3],
         quality: 1,
       });
-
-      setImage(result);
-
+      if (!result.cancelled) {
+        setImage(result);
+      }
     } catch (e) {
       console.log(e);
     }
@@ -75,6 +77,7 @@ const Main = () => {
         <Message
           multiline={true}
           numberOfLines={10}
+          returnKeyType="done"
           style={{
             height: 200,
             textAlignVertical: "top",
@@ -82,10 +85,13 @@ const Main = () => {
             borderBottomColor: "#6BAAE8",
           }}
           placeholder="글이나 사진을 올려주세요."
+          onSubmitEditing={() => {
+            Keyboard.dismiss();
+          }}
         />
-        <Preview data={image}></Preview>
+        <Preview data={image} setForm={setForm} form={form}></Preview>
         <BtnColumn>
-          <ImgBtn onPress={upload}>
+          <ImgBtn isDisabled={form == 4} onPress={upload} disabled={form == 4}>
             <Ionicons size={30} color="#6BAAE8" name="image" />
           </ImgBtn>
           <SendBtn>

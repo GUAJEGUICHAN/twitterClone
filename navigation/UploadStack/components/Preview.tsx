@@ -25,8 +25,8 @@ const ImageView = styled.View<{ isOne: boolean }>`
 
 const ImageWrapper = styled.View`
   position: relative;
-  width: 91%;
-  height: 91%;
+  width: 90%;
+  height: 90%;
 `;
 
 const ImageInstance = styled.Image`
@@ -48,13 +48,16 @@ interface PreviewProp {
     type: string;
     uri: string;
   };
+  setForm: Function;
+  form: number;
 }
 
-const Preview: React.FC<PreviewProp> = ({ data }) => {
+const Preview: React.FC<PreviewProp> = ({ data, setForm, form }) => {
   const [images, setImages] = useState([]);
   const [isOne, setIsOne] = useState(false);
   useEffect(() => {
     if (data != null) {
+      setForm(form + 1);
       setImages([...images, data]);
     }
   }, [data]);
@@ -68,6 +71,7 @@ const Preview: React.FC<PreviewProp> = ({ data }) => {
     }
   }, [images]);
   const removeImage = (index: number) => {
+    setForm(form - 1);
     setImages(images.filter((e, idx) => index != idx));
   };
 
@@ -76,7 +80,7 @@ const Preview: React.FC<PreviewProp> = ({ data }) => {
       {images.length != 0 ? (
         <ImageContainer>
           {images.map((e, idx) => (
-            <ImageView isOne={isOne}>
+            <ImageView isOne={isOne} key={idx}>
               <ImageWrapper>
                 <ImageInstance
                   style={StyleSheet.absoluteFill}
