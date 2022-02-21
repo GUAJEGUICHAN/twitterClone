@@ -1,18 +1,106 @@
-import React from "react";
+import React from 'react';
 
-import { Text, Dimensions } from "react-native";
-import styled from "styled-components/native";
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
-import Upload from "./components/Upload";
+import { Text, Dimensions, FlatList } from 'react-native';
+
+import { useQuery, useQueryClient } from 'react-query';
+
+import styled from 'styled-components/native';
+import { fetchAllPosts } from '../../service/api';
+
+import Tweet from './components/Tweet';
+import Upload from './components/Upload';
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const Container = styled.View`
-  position: relative;
-  height: ${SCREEN_HEIGHT}px;
+  display:flex;
+  flex-direction: column;
+  /* flex:1; */
+  height:${SCREEN_HEIGHT}px;
+  /* height:844px; */
+  background-color:white;
 `;
+
+type ImagePostProps = {
+  idx: number,
+  name: string,
+  originalName: string,
+  saveName: string,
+  size: number,
+  uploadPath: string,
+  extension: string,
+  url: string,
+  createdAt: string
+}
+
+type PostProps = {
+  idx: number,
+  title: string,
+  content: string,
+  createdAt: string,
+  deletedAt: string,
+  updatedAt: string,
+  postImages: Array<ImagePostProps>
+}
+
 export default function Tweets() {
+  const { data: tweetData, isLoading, isRefetching: isRefetchingAllPosts }: { data: any, isLoading: boolean, isRefetching: boolean } = useQuery<any>(['allPosts'], fetchAllPosts);
+
+  const queryClient = useQueryClient();
+
+  const TweetComments = [
+    {
+      id: 1,
+      color: 'red',
+      name: '트럼프',
+      content: '안녕하세요 오바마',
+    },
+    {
+      id: 2,
+      color: 'blue',
+      name: '오바마',
+      content: '안녕하세요 트럼프',
+    },
+  ];
+
+  const onRefresh = React.useCallback(() => {
+    queryClient.refetchQueries(['allPosts']);
+  }, []);
+  const refreshing = isRefetchingAllPosts;
+
+  const renderItem = ({ item }: { item: PostProps }) => (
+    <Tweet
+      key={item.idx}
+      profileImage=""
+      username="오바마"
+      date={item.createdAt}
+      contentText={item.content}
+      comments={TweetComments}
+      contentImageList={item.postImages}
+    />
+  );
+
   return (
-    <Container>
-      <Text>Tweets</Text>
+    <Container
+      style={{
+        flex: 1,
+        backgroundColor: 'gray',
+      }}
+    >
+      {isLoading
+        ? (<Text> 로딩중</Text>)
+        : (
+          <FlatList
+            style={{
+              flex: 1,
+            }}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            data={tweetData.posts}
+            renderItem={renderItem}
+            keyExtractor={(item) => `${item.idx}`}
+          />
+        )}
       <Upload />
     </Container>
   );

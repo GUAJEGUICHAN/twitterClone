@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import { Entypo, Ionicons, FontAwesome } from "@expo/vector-icons";
+import { Entypo, Ionicons, FontAwesome } from '@expo/vector-icons';
 
-import Tweets from "./HomeTab/Tweets";
-import UserInfo from "./HomeTab/UserInfo";
-import Search from "./HomeTab/Search";
+import Tweets from './HomeTab/Tweets';
+import UserInfo from './HomeTab/UserInfo';
+import Search from './HomeTab/Search';
 
 const Tab = createBottomTabNavigator();
 
@@ -14,13 +14,13 @@ const Home = React.memo(() => (
   <Tab.Navigator
     initialRouteName="Tweets"
     screenOptions={{
-      tabBarActiveTintColor: "#f0edf6",
-      tabBarInactiveTintColor: "#3e2465",
-      tabBarStyle: { backgroundColor: "#E2E8EC" },
+      tabBarActiveTintColor: '#f0edf6',
+      tabBarInactiveTintColor: '#3e2465',
+      tabBarStyle: { backgroundColor: '#E2E8EC' },
       tabBarShowLabel: false,
     }}
     sceneContainerStyle={{
-      backgroundColor: "white",
+      backgroundColor: 'white',
     }}
   >
     <Tab.Screen
@@ -30,7 +30,7 @@ const Home = React.memo(() => (
         tabBarIcon: ({ focused }) => (
           <Entypo
             size={30}
-            color={focused ? "#6BAAE8" : "#788ea4"}
+            color={focused ? '#6BAAE8' : '#788ea4'}
             name="home"
           />
         ),
@@ -43,7 +43,7 @@ const Home = React.memo(() => (
         tabBarIcon: ({ focused }) => (
           <Ionicons
             size={30}
-            color={focused ? "#6BAAE8" : "#788ea4"}
+            color={focused ? '#6BAAE8' : '#788ea4'}
             name="person"
           />
         ),
@@ -56,7 +56,7 @@ const Home = React.memo(() => (
         tabBarIcon: ({ focused }) => (
           <FontAwesome
             size={30}
-            color={focused ? "#6BAAE8" : "#788ea4"}
+            color={focused ? '#6BAAE8' : '#788ea4'}
             name="search"
           />
         ),

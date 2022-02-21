@@ -1,27 +1,26 @@
-import React from "react";
-import styled from "styled-components/native";
-import { Dimensions, View, Text } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import React from 'react';
+import styled from 'styled-components/native';
+import { View, Text } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 const PopupBtn = styled.TouchableOpacity`
   width: 80px;
   height: 80px;
-  border-radius: 100;
+  border-radius: 100px;
   background-color: #6baae8;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   justify-content: center;
   align-items: center;
 `;
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
-const Upload = () => {
+function Upload() {
   return (
     <View
       style={{
-        position: "absolute",
+        position: 'absolute',
         bottom: 200,
         right: 20,
-        alignSelf: "flex-end",
+        alignSelf: 'flex-end',
         zIndex: 5,
       }}
     >
@@ -32,6 +31,6 @@ const Upload = () => {
       </PopupBtn>
     </View>
   );
-};
+}
 
 export default Upload;
