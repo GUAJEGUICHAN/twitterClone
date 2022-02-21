@@ -1,3 +1,5 @@
+import { BASE_URL } from '@env'
+
 type PostsProps = {
   posts: Array<any>,
   total_page: Number,
@@ -5,9 +7,8 @@ type PostsProps = {
 }
 
 export async function fetchAllPosts() {
-  const url = '146.56.36.179:8080/api/posts';
+  const url = BASE_URL + '/api/posts';
   const response = await fetch(url);
-  console.log(response);
-  const data = await response.json();
+  const data: PostsProps = await response.json();
   return data;
 }
