@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 
 import {
   Animated,
+  Image,
   Pressable, Text, TextInput, View,
 } from 'react-native';
 
@@ -96,7 +97,7 @@ type TweetProps = {
   username: string,
   date: string,
   contentText: string,
-  contentImage: string,
+  contentImageList: Array<any>,
   comments: Array<any>,
 }
 
@@ -105,7 +106,7 @@ export default function Tweet({
   username,
   date,
   contentText,
-  contentImage = '',
+  contentImageList = [],
   comments,
 }: TweetProps) {
   const [commentToggle, setCommentToggle] = useState(false);
@@ -166,18 +167,23 @@ export default function Tweet({
           <TweetImageContainer>
             {/* <Image source={contentImage||''}/> */}
             {
-              contentImage
-                ? (
-                  <View
-                    style={{
-                      // flex: 1,
-                      width: '100%',
-                      height: 200,
-                      backgroundColor: 'orange',
-                      borderRadius: 30,
-                    }}
-                  />
-                ) : false
+              contentImageList.map((image) => (
+                <Image
+                  key={image.idx}
+                  style={{
+                    borderWidth: 2,
+                    borderRadius: 10,
+                    borderColor: 'lightgray',
+                    backgroundColor: 'lightgray',
+                    width: '100%',
+                    height: 200,
+                  }}
+                  source={{
+                    // uri: process.env.BASE_URL + image.url
+                    uri: `http://146.56.36.179:8080${image.url}`,
+                  }}
+                />
+              ))
             }
           </TweetImageContainer>
           <View

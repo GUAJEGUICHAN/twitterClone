@@ -1,8 +1,11 @@
 import React from 'react';
 
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import styled from 'styled-components/native';
+
+import { useQuery } from 'react-query';
+import { fetchAllPosts } from '../../service/api';
 
 import Tweet from './components/Tweet';
 
@@ -13,7 +16,31 @@ const Container = styled.ScrollView`
   background-color:white;
 `;
 
+type ImagePostProps = {
+  idx: number,
+  name: string,
+  originalName: string,
+  saveName: string,
+  size: number,
+  uploadPath: string,
+  extension: string,
+  url: string,
+  createdAt: string
+}
+
+type PostProps = {
+  idx: number,
+  title: string,
+  content: string,
+  createdAt: string,
+  deletedAt: string,
+  updatedAt: string,
+  postImages: Array<ImagePostProps>
+}
+
 export default function Tweets() {
+  const { data, isLoading }: { data: any, isLoading: boolean } = useQuery<any>(['allPosts'], fetchAllPosts);
+
   const TweetComments = [
     {
       id: 1,
@@ -35,46 +62,26 @@ export default function Tweets() {
           alignSelf: 'center',
         }}
       >
-        <Tweet
-          profileImage=""
-          username="오바마"
-          date="2022/01/01"
-          contentText="새해복 많이 받으세요"
-          comments={TweetComments}
-          contentImage="/asdf"
-        />
-        <Tweet
-          profileImage=""
-          username="트럼프"
-          date="2022/01/01"
-          contentText="우리 모두 새해복 많이 받아요~"
-          comments={TweetComments}
-          contentImage="/asdf"
-        />
-        <Tweet
-          profileImage=""
-          username="오바마"
-          date="2022/01/01"
-          contentText="땡큐 땡큐"
-          comments={TweetComments}
-          contentImage="/asdf"
-        />
-        <Tweet
-          profileImage=""
-          username="트럼프"
-          date="2022/01/01"
-          contentText="요즘 뭐함? "
-          comments={TweetComments}
-          contentImage="/asdf"
-        />
-        <Tweet
-          profileImage=""
-          username="오바마"
-          date="2022/01/01"
-          contentText="요즘 좀 쉬는 중 ㅎㅎ"
-          comments={TweetComments}
-          contentImage="/asdf"
-        />
+        {isLoading ? <Text>로딩중</Text> : data.posts.map((tweet: PostProps) => (
+          <Tweet
+            key={tweet.idx}
+            profileImage=""
+            username="오바마"
+            date={tweet.createdAt}
+            contentText={tweet.content}
+            comments={TweetComments}
+            contentImageList={tweet.postImages}
+          />
+        ))}
+        {/* <Tweet
+            profileImage=""
+            username="오바마"
+            date="2022/01/01"
+            contentText="새해복 많이 받으세요"
+            comments={TweetComments}
+            contentImageList="/asdf"
+          /> */
+        }
       </View>
     </Container>
   );
