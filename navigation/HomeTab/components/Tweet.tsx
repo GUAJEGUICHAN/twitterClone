@@ -12,7 +12,10 @@ import {
 
 import styled from 'styled-components/native';
 
+import { useQueryClient } from 'react-query';
+
 import TweetComment from './TweetComment';
+import { deletePost } from '../../../service/api';
 
 const ComponentContainer = styled.View`
   display:flex;
@@ -93,6 +96,7 @@ const CommentHeader = styled.Pressable`
 `;
 
 type TweetProps = {
+  idx: number,
   profileImage: string,
   username: string,
   date: string,
@@ -102,6 +106,7 @@ type TweetProps = {
 }
 
 export default function Tweet({
+  idx,
   profileImage = '',
   username,
   date,
@@ -112,8 +117,10 @@ export default function Tweet({
   const [commentToggle, setCommentToggle] = useState(false);
   const [isEditMode, setEditMode] = useState(false);
 
-  const degree = useRef(new Animated.Value(0)).current;
+  const queryClient = useQueryClient();
+  const ACCESS_TOKEN = queryClient.getQueryData('ACCESS_TOKEN');
 
+  const degree = useRef(new Animated.Value(0)).current;
   const turnedDegree = degree.interpolate({
     inputRange: [0, 90],
     outputRange: ['0deg', '90deg'],
@@ -199,7 +206,13 @@ export default function Tweet({
                 : (<Feather name="edit-2" size={20} />)}
 
             </Pressable>
-            <Ionicons name="trash-outline" size={20} />
+            <Pressable onPress={async () => {
+              await deletePost({ idx, accessToken: ACCESS_TOKEN });
+              queryClient.refetchQueries(['allPosts']);
+            }}
+            >
+              <Ionicons name="trash-outline" size={20} />
+            </Pressable>
           </View>
         </TweetContainer>
         <CommentContainer>
