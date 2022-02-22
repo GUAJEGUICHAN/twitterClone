@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { Text } from 'react-native';
+import { TextInput } from 'react-native-paper';
 
 import styled from 'styled-components/native';
 
-import { TextInput } from 'react-native-paper';
-
 import PropTypes from 'prop-types';
+
+import { useQuery, useQueryClient } from 'react-query';
+
+import { postSignup } from '../../service/api';
 
 const BlueButton = styled.TouchableOpacity`
   background-color:#1D9BF0;
@@ -42,6 +45,52 @@ const TextInputContainer = styled.View`
 `;
 
 export default function SignUp({ navigation }) {
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [err, setErr] = useState(false);
+
+  const queryclient = useQueryClient();
+
+  const {
+    data,
+    refetch: getToken,
+  } = useQuery<any>('SignUp', () => (postSignup({ email, username, password })), {
+    enabled: false,
+  });
+
+  useEffect(() => {
+    console.log('useEffect', data);
+    if (data === undefined) {
+      console.log('회원가입 안됨');
+      return;
+    } if (data.message !== undefined) {
+      console.log('회원가입 실패', data.message);
+      setErr(true);
+      return;
+    }
+
+    console.log('회원가입 완료');
+    setEmail('');
+    setUsername('');
+    setPassword('');
+    queryclient.setQueryData('SignUp', undefined);
+
+    navigation.goBack();
+  });
+
+  const handleChangeEmail = useCallback((text: string) => {
+    setEmail(text);
+  }, []);
+
+  const handleChangeUsername = useCallback((text: string) => {
+    setUsername(text);
+  }, []);
+
+  const handleChangePassword = useCallback((text: string) => {
+    setPassword(text);
+  }, []);
+
   return (
     <Container>
       <TitleContainer>
@@ -52,21 +101,24 @@ export default function SignUp({ navigation }) {
           mode="outlined"
           textContentType="emailAddress"
           label="Email"
+          autoCapitalize="none"
           activeOutlineColor="#1D9BF0"
           activeUnderlineColor="#1D9BF0"
           outlineColor="#1D9BF0"
+          onChangeText={handleChangeEmail}
           style={{
             marginBottom: 8,
           }}
         />
         <TextInput
           mode="outlined"
-          textContentType="name"
-          secureTextEntry
+          textContentType="username"
           label="Username"
+          autoCapitalize="none"
           activeOutlineColor="#1D9BF0"
           activeUnderlineColor="#1D9BF0"
           outlineColor="#1D9BF0"
+          onChangeText={handleChangeUsername}
           style={{
             marginBottom: 8,
           }}
@@ -75,15 +127,18 @@ export default function SignUp({ navigation }) {
           mode="outlined"
           textContentType="password"
           secureTextEntry
+          autoCapitalize="none"
           label="Password"
           activeOutlineColor="#1D9BF0"
           activeUnderlineColor="#1D9BF0"
           outlineColor="#1D9BF0"
+          onChangeText={handleChangePassword}
         />
       </TextInputContainer>
       <BlueButton
-        // onPress={() => navigation.navigate('')}
-        onPress={() => navigation.goBack()}
+        onPress={() => {
+          getToken();
+        }}
       >
         <Text
           style={{
