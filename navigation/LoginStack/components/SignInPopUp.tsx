@@ -7,7 +7,7 @@ import { CommonActions } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 
 import styled from 'styled-components/native';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { postLogin } from '../../../service/api';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -94,6 +94,9 @@ export default function SignInPopUp({ navigation, closeButton }: any): React.Rea
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [err, setErr] = useState(false);
+
+  const queryClient = useQueryClient();
+
   const {
     data: ACCESS_TOKEN,
     refetch: getToken,
@@ -104,15 +107,15 @@ export default function SignInPopUp({ navigation, closeButton }: any): React.Rea
       enabled: false,
     },
   );
-
+  console.log('ACCESS_TOKEN', ACCESS_TOKEN);
   useEffect(() => {
     if (ACCESS_TOKEN === undefined) {
       return;
     } if (ACCESS_TOKEN.message !== undefined) {
       setErr(true);
+      queryClient.setQueryData('ACCESS_TOKEN', undefined);
       setEmail('');
       setPassword('');
-
       return;
     }
 

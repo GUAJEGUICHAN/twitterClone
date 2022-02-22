@@ -8,6 +8,8 @@ import styled from 'styled-components/native';
 
 import PropTypes from 'prop-types';
 
+import { useQueryClient } from 'react-query';
+
 import Upload from './components/Upload';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -61,6 +63,8 @@ const Name = styled.Text`
 `;
 
 export default function UserInfo({ navigation }) {
+  const queryClient = useQueryClient();
+
   return (
     <Container>
       <BackGround>
@@ -76,6 +80,7 @@ export default function UserInfo({ navigation }) {
 
       <BlueButton
         onPress={() => {
+          queryClient.setQueryData('ACCESS_TOKEN', undefined);
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
