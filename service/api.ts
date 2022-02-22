@@ -25,5 +25,19 @@ export async function postLogin({ email, password }) {
   }).then((res) => (res.json())).catch(() => ({ jwt: 'err' }));
 
   return data;
-  // return 'test';
+}
+
+export async function postSignup({ email, username, password }) {
+  const url = `${BASE_URL}/api/member`;
+
+  const data = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email, username, password }),
+  }).then((res) => (res.json())).catch(() => ({ jwt: 'err' }));
+  console.log('postSignup', data);
+
+  return data;
 }
