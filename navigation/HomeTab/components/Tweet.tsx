@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 
 import {
   Animated,
@@ -15,7 +15,8 @@ import styled from 'styled-components/native';
 import { useQueryClient } from 'react-query';
 
 import TweetComment from './TweetComment';
-import { deletePost } from '../../../service/api';
+
+import { deletePost, updatePost } from '../../../service/api';
 
 const ComponentContainer = styled.View`
   display:flex;
@@ -116,6 +117,7 @@ export default function Tweet({
 }: TweetProps) {
   const [commentToggle, setCommentToggle] = useState(false);
   const [isEditMode, setEditMode] = useState(false);
+  const [newContent, setNewContent] = useState(contentText);
 
   const queryClient = useQueryClient();
   const ACCESS_TOKEN = queryClient.getQueryData('ACCESS_TOKEN');
@@ -126,6 +128,10 @@ export default function Tweet({
     outputRange: ['0deg', '90deg'],
     extrapolate: 'clamp',
   });
+
+  const handleContentChange = useCallback((text: string) => {
+    setNewContent(text);
+  }, []);
 
   return (
     <ComponentContainer>
@@ -141,7 +147,8 @@ export default function Tweet({
               <View>
                 <TextInput
                   multiline
-                  value={contentText}
+                  value={newContent}
+                  onChangeText={handleContentChange}
                   style={{
                     display: 'flex',
                     justifyContent: 'flex-start',
@@ -200,7 +207,17 @@ export default function Tweet({
               alignSelf: 'flex-end',
             }}
           >
-            <Pressable onPress={() => { setEditMode((prev) => !prev); }}>
+            <Pressable onPress={async () => {
+              if (isEditMode === true) {
+                // 수정내용 전달, 업데이트
+                await updatePost({ idx, accessToken: ACCESS_TOKEN, content: newContent });
+                queryClient.refetchQueries(['allPosts']);
+              } else {
+                // 그냥 아무것도 안함
+              }
+              setEditMode((prev) => !prev);
+            }}
+            >
               {isEditMode
                 ? (<Ionicons name="save-outline" size={20} />)
                 : (<Feather name="edit-2" size={20} />)}
