@@ -1,8 +1,11 @@
-
 import React from 'react';
-import styled from 'styled-components/native';
 import { View, Text } from 'react-native';
+
+import styled from 'styled-components/native';
+
 import { Ionicons } from '@expo/vector-icons';
+
+import { useNavigation } from '@react-navigation/native';
 
 const PopupBtn = styled.TouchableOpacity`
   width: 80px;
@@ -15,6 +18,8 @@ const PopupBtn = styled.TouchableOpacity`
 `;
 
 function Upload() {
+  const navigation = useNavigation();
+
   return (
     <View
       style={{
@@ -27,7 +32,7 @@ function Upload() {
     >
       <PopupBtn
         onPress={() => {
-          navigation.navigate("Upload", { screen: "Main" });
+          navigation.navigate('Upload', { screen: 'Main' });
         }}
       >
         <Text>
