@@ -42,6 +42,28 @@ export async function postSignup({ email, username, password }) {
   return data;
 }
 
+export async function updatePost({ idx, accessToken, content }) {
+  const url = `${BASE_URL}/api/member/posts/${idx}`;
+
+  const formData = new FormData();
+  formData.append('title', 'title');
+  formData.append('content', content);
+
+  const data = await fetch(url, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${accessToken.jwt}`,
+    },
+    body: formData,
+  }).then((res) => res.json()).catch((err) => {
+    console.log(err);
+    return ({ jwt: 'err' });
+  });
+  console.log('edit', data);
+
+  // return data;
+}
+
 export async function deletePost({ idx, accessToken }) {
   const url = `${BASE_URL}/api/member/posts/${idx}`;
 
