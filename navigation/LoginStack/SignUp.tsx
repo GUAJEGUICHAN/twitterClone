@@ -35,7 +35,7 @@ const Title = styled.Text`
 const Container = styled.View`
   display:flex;
   flex-direction:column;
-align-items:center;
+  align-items:center;
 /* align-content:center; */
 `;
 
@@ -44,11 +44,17 @@ const TextInputContainer = styled.View`
   padding:40px;
 `;
 
+const MessageContainer = styled.View`
+  margin-top: -20px;
+  margin-bottom: 10px;
+
+`;
+
 export default function SignUp({ navigation }) {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [err, setErr] = useState(false);
+  const [errorMessage, setErrorMeesage] = useState('');
 
   const queryclient = useQueryClient();
 
@@ -66,7 +72,7 @@ export default function SignUp({ navigation }) {
       return;
     } if (data.message !== undefined) {
       console.log('회원가입 실패', data.message);
-      setErr(true);
+      setErrorMeesage(data.message);
       return;
     }
 
@@ -135,6 +141,15 @@ export default function SignUp({ navigation }) {
           onChangeText={handleChangePassword}
         />
       </TextInputContainer>
+      <MessageContainer>
+        <Text
+          style={{
+            color: 'red',
+          }}
+        >
+          {errorMessage}
+        </Text>
+      </MessageContainer>
       <BlueButton
         onPress={() => {
           getToken();
