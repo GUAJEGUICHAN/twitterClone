@@ -36,6 +36,7 @@ type PostProps = {
   idx: number,
   title: string,
   content: string,
+  member: { username: string },
   createdAt: string,
   deletedAt: string,
   updatedAt: string,
@@ -72,8 +73,9 @@ export default function Tweets() {
   const renderItem = ({ item }: { item: PostProps }) => (
     <Tweet
       key={item.idx}
+      idx={item.idx}
       profileImage=""
-      username="오바마"
+      username={item.member.username}
       date={item.createdAt}
       contentText={item.content}
       comments={TweetComments}
