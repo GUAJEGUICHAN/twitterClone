@@ -15,9 +15,8 @@ const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const Container = styled.View`
   display:flex;
   flex-direction: column;
-  /* flex:1; */
+  position:relative;
   height:${SCREEN_HEIGHT}px;
-  /* height:844px; */
   background-color:white;
 `;
 
@@ -47,6 +46,8 @@ export default function Tweets() {
   const { data: tweetData, isLoading, isRefetching: isRefetchingAllPosts }: { data: any, isLoading: boolean, isRefetching: boolean } = useQuery<any>(['allPosts'], fetchAllPosts);
 
   const queryClient = useQueryClient();
+
+  // const theData = queryClient.getQueryData('ACCESS_TOKEN')
 
   const TweetComments = [
     {
@@ -83,7 +84,6 @@ export default function Tweets() {
   return (
     <Container
       style={{
-        flex: 1,
         backgroundColor: 'gray',
       }}
     >

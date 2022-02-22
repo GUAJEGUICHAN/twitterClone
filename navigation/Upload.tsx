@@ -1,23 +1,27 @@
-import React from "react";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Main from "./UploadStack/Main";
-import styled from "styled-components/native";
-import { Ionicons } from "@expo/vector-icons";
-import { Text } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import React from 'react';
+import { Text } from 'react-native';
+
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+
+import styled from 'styled-components/native';
+
+import { Ionicons } from '@expo/vector-icons';
+
+import Main from './UploadStack/Main';
 
 const NativeStack = createNativeStackNavigator();
 
 const Btn = styled.TouchableOpacity``;
 
-const Upload = () => {
+function Upload() {
   const navigation = useNavigation();
 
   return (
     <NativeStack.Navigator
       screenOptions={{
         headerBackTitleVisible: false,
-        title: "",
+        title: '',
         headerLeft: () => (
           <Btn
             onPress={() => {
@@ -31,13 +35,13 @@ const Upload = () => {
         ),
         headerShadowVisible: false,
         contentStyle: {
-          backgroundColor: "white",
+          backgroundColor: 'white',
         },
       }}
     >
       <NativeStack.Screen name="Main" component={Main} />
     </NativeStack.Navigator>
   );
-};
+}
 
 export default Upload;

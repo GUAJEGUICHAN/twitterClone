@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components/native";
-import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet } from "react-native";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components/native';
+import { Ionicons } from '@expo/vector-icons';
+import { StyleSheet } from 'react-native';
+
 const Container = styled.View``;
 
 const ImageContainer = styled.View`
@@ -16,8 +17,8 @@ const ImageContainer = styled.View`
 `;
 
 const ImageView = styled.View<{ isOne: boolean }>`
-  width: ${(props) => (props.isOne ? `100%` : `50%`)};
-  height: ${(props) => (props.isOne ? `100%` : `50%`)};
+  width: ${(props) => (props.isOne ? '100%' : '50%')};
+  height: ${(props) => (props.isOne ? '100%' : '50%')};
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
@@ -56,28 +57,26 @@ const Preview: React.FC<PreviewProp> = ({ data, setForm, form }) => {
   const [images, setImages] = useState([]);
   const [isOne, setIsOne] = useState(false);
   useEffect(() => {
-    if (data != null) {
+    if (data !== null) {
       setForm(form + 1);
       setImages([...images, data]);
     }
   }, [data]);
   useEffect(() => {
-    if (images.length == 1) {
+    if (images.length === 1) {
       setIsOne(true);
-    } else {
-      if (isOne) {
-        setIsOne(false);
-      }
+    } else if (isOne) {
+      setIsOne(false);
     }
   }, [images]);
   const removeImage = (index: number) => {
     setForm(form - 1);
-    setImages(images.filter((e, idx) => index != idx));
+    setImages(images.filter((e, idx) => index !== idx));
   };
 
   return (
     <Container>
-      {images.length != 0 ? (
+      {images.length !== 0 ? (
         <ImageContainer>
           {images.map((e, idx) => (
             <ImageView isOne={isOne} key={idx}>
