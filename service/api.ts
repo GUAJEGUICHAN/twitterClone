@@ -41,3 +41,18 @@ export async function postSignup({ email, username, password }) {
 
   return data;
 }
+
+export async function deletePost({ idx, accessToken }) {
+  const url = `${BASE_URL}/api/member/posts/${idx}`;
+
+  console.log(idx, accessToken);
+
+  await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${accessToken.jwt}`,
+    },
+  }).then((res) => (res.json())).catch((err) => {
+    console.log(err);
+  });
+}
