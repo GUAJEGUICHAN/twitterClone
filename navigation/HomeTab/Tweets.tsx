@@ -65,9 +65,9 @@ export default function Tweets() {
     },
   ];
 
-  const onRefresh = React.useCallback(() => {
+  const onRefresh = () => {
     queryClient.refetchQueries(['allPosts']);
-  }, []);
+  };
   const refreshing = isRefetchingAllPosts;
 
   const renderItem = ({ item }: { item: PostProps }) => (
