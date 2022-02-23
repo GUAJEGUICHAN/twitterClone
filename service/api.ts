@@ -42,6 +42,33 @@ export async function postSignup({ email, username, password }) {
   return data;
 }
 
+export async function uploadPost({ accessToken, content, images }) {
+  const url = `${BASE_URL}/api/member/posts`;
+
+  const formData = new FormData();
+  formData.append('title', 'title');
+  formData.append('content', content);
+  images.forEach((image) => {
+    formData.append('img',
+      {
+        uri: image.uri,
+        name: `photo.png`,
+        type: `image/png`,
+      })
+  });
+
+  const data = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multiple/form-data',
+      Authorization: `Bearer ${accessToken.jwt}`,
+    },
+    body: formData,
+  }).then((res) => (res.json())).catch((err) => {
+    console.log(err);
+  });
+}
+
 export async function updatePost({ idx, accessToken, content }) {
   const url = `${BASE_URL}/api/member/posts/${idx}`;
 
