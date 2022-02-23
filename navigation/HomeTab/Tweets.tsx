@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Text, Dimensions, FlatList } from 'react-native';
 
-import { useQuery, useQueryClient } from 'react-query';
+import { useInfiniteQuery, useQueryClient } from 'react-query';
 
 import styled from 'styled-components/native';
 import { fetchAllPosts } from '../../service/api';
@@ -44,11 +44,24 @@ type PostProps = {
 }
 
 export default function Tweets() {
-  const { data: tweetData, isLoading, isRefetching: isRefetchingAllPosts }: { data: any, isLoading: boolean, isRefetching: boolean } = useQuery<any>(['allPosts'], fetchAllPosts);
+  const {
+    data: tweetData,
+    isLoading,
+    isRefetching: isRefetchingAllPosts,
+    hasNextPage: hasTweetsNextPage,
+    fetchNextPage: fetchTweetsNextPage,
+  }: any = useInfiniteQuery<any>(
+    ['allPosts'],
+    fetchAllPosts,
+    {
+      getNextPageParam: (currentPage) => {
+        const nextPage = currentPage.current_page + 1;
+        return nextPage > currentPage.total_pages ? null : nextPage;
+      },
+    },
+  );
 
   const queryClient = useQueryClient();
-
-  // const theData = queryClient.getQueryData('ACCESS_TOKEN')
 
   const TweetComments = [
     {
@@ -68,6 +81,7 @@ export default function Tweets() {
   const onRefresh = () => {
     queryClient.refetchQueries(['allPosts']);
   };
+
   const refreshing = isRefetchingAllPosts;
 
   const renderItem = ({ item }: { item: PostProps }) => (
@@ -82,6 +96,12 @@ export default function Tweets() {
       contentImageList={item.postImages}
     />
   );
+
+  function loadMore() {
+    if (hasTweetsNextPage) {
+      fetchTweetsNextPage();
+    }
+  }
 
   return (
     <Container
@@ -98,9 +118,11 @@ export default function Tweets() {
             }}
             refreshing={refreshing}
             onRefresh={onRefresh}
-            data={tweetData.posts}
+            data={tweetData.pages.map((page) => page.posts).flat()}
             renderItem={renderItem}
             keyExtractor={(item) => `${item.idx}`}
+            onEndReached={loadMore}
+            showsVerticalScrollIndicator={false}
           />
         )}
       <Upload />

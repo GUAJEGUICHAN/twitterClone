@@ -6,10 +6,12 @@ type PostsProps = {
   current_page: Number,
 }
 
-export async function fetchAllPosts() {
-  const url = `${BASE_URL}/api/posts`;
-  const response = await fetch(url);
-  const data: PostsProps = await response.json();
+export async function fetchAllPosts({ pageParam = 0 }) {
+  const url = `${BASE_URL}/api/posts?page=${pageParam}`;
+
+  const data: PostsProps = await fetch(url)
+    .then((res) => (res.json()));
+
   return data;
 }
 
@@ -22,7 +24,8 @@ export async function postLogin({ email, password }) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ email, password }),
-  }).then((res) => (res.json())).catch(() => ({ jwt: 'err' }));
+  }).then((res) => (res.json()))
+    .catch(() => ({ jwt: 'err' }));
 
   return data;
 }
@@ -51,12 +54,6 @@ export async function uploadPost({ accessToken, content, images }) {
   images.forEach((image) => {
     const ext = image.uri.split('.').pop();
     const filename = image.uri.split('/').pop();
-
-    // formData.append('img', {
-    //   name: filename,
-    //   type: `image/${ext}`,
-    //   uri: Platform.OS === 'ios' ? image.uri : image.uri,
-    // });
     formData.append(
       'img',
       {
@@ -78,11 +75,14 @@ export async function uploadPost({ accessToken, content, images }) {
     body: formData,
   }).then((res) => {
     res.json().then((data) => console.log('api', data));
+
     return res.json();
   }).catch((err) => {
     console.log('err', err);
+
     return new Error(err);
   });
+
   return data;
 }
 
