@@ -51,6 +51,12 @@ export async function uploadPost({ accessToken, content, images }) {
   images.forEach((image) => {
     const ext = image.uri.split('.').pop();
     const filename = image.uri.split('/').pop();
+
+    // formData.append('img', {
+    //   name: filename,
+    //   type: `image/${ext}`,
+    //   uri: Platform.OS === 'ios' ? image.uri : image.uri,
+    // });
     formData.append(
       'img',
       {
@@ -65,7 +71,8 @@ export async function uploadPost({ accessToken, content, images }) {
   const data = await fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'multiple/form-data',
+      Accept: 'application/json',
+      'Content-Type': 'multipart/form-data',
       Authorization: `Bearer ${accessToken.jwt}`,
     },
     body: formData,
