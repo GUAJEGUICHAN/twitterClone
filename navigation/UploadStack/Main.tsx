@@ -4,6 +4,7 @@ import styled from 'styled-components/native';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useQueryClient } from 'react-query';
+import { useNavigation } from '@react-navigation/native';
 import Preview from './components/Preview';
 import { uploadPost } from '../../service/api';
 
@@ -51,6 +52,7 @@ function Main() {
   const [images, setImages] = useState([]);
   const [content, setContent] = useState('');
 
+  const naviation = useNavigation();
   const queryClient = useQueryClient();
   const ACCESS_TOKEN = queryClient.getQueryData('ACCESS_TOKEN');
 
@@ -105,14 +107,26 @@ function Main() {
             <Ionicons size={30} color="#6BAAE8" name="image" />
           </ImgBtn>
           <SendBtn onPress={
-            async () => {
-              await uploadPost({
+            () => {
+              uploadPost({
                 accessToken: ACCESS_TOKEN,
                 content,
                 images,
+              }).then((msg) => {
+                console.log('msg', msg);
+                if (msg.meesage == undefined) {
+                  console.log('정상작동');
+                  queryClient.refetchQueries(['allPosts']);
+                  naviation.goBack();
+                } else {
+                  console.log('msg', msg.message);
+
+                  throw new Error('에러');
+                }
+              }).catch((error) => {
+                console.log('error', error);
               });
             }
-
           }
           >
             <Text style={{ color: 'white' }}>올리기</Text>
