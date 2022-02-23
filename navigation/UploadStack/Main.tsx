@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Text, Keyboard } from 'react-native';
 import styled from 'styled-components/native';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import { useQueryClient } from 'react-query';
+import { useNavigation } from '@react-navigation/native';
 import Preview from './components/Preview';
+import { uploadPost } from '../../service/api';
 
 const Container = styled.View`
   padding: 30px 20px 0 20px;
@@ -46,9 +49,17 @@ const SendBtn = styled.TouchableOpacity`
 `;
 
 function Main() {
-  // const inputRef = useRef<null | HTMLInputElement>(null);
-  const [form, setForm] = useState(0);
-  const [image, setImage] = useState(null);
+  const [images, setImages] = useState([]);
+  const [content, setContent] = useState('');
+
+  const naviation = useNavigation();
+  const queryClient = useQueryClient();
+  const ACCESS_TOKEN = queryClient.getQueryData('ACCESS_TOKEN');
+
+  const handleChangeText = useCallback((text: string) => {
+    setContent(text);
+  }, []);
+
   const upload = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
@@ -58,7 +69,7 @@ function Main() {
         quality: 1,
       });
       if (!result.cancelled) {
-        setImage(result);
+        setImages((prev) => [...prev, result]);
       }
     } catch (e) {
       console.log(e);
@@ -84,17 +95,40 @@ function Main() {
             borderBottomWidth: 2,
             borderBottomColor: '#6BAAE8',
           }}
+          onChangeText={handleChangeText}
           placeholder="글이나 사진을 올려주세요."
           onSubmitEditing={() => {
             Keyboard.dismiss();
           }}
         />
-        <Preview data={image} setForm={setForm} form={form} />
+        <Preview images={images} setImages={setImages} />
         <BtnColumn>
-          <ImgBtn isDisabled={form === 4} onPress={upload} disabled={form === 4}>
+          <ImgBtn isDisabled={images.length === 4} onPress={upload} disabled={images.length === 4}>
             <Ionicons size={30} color="#6BAAE8" name="image" />
           </ImgBtn>
-          <SendBtn>
+          <SendBtn onPress={
+            () => {
+              uploadPost({
+                accessToken: ACCESS_TOKEN,
+                content,
+                images,
+              }).then((msg) => {
+                console.log('msg', msg);
+                if (msg.meesage == undefined) {
+                  console.log('정상작동');
+                  queryClient.refetchQueries(['allPosts']);
+                  naviation.goBack();
+                } else {
+                  console.log('msg', msg.message);
+
+                  throw new Error('에러');
+                }
+              }).catch((error) => {
+                console.log('error', error);
+              });
+            }
+          }
+          >
             <Text style={{ color: 'white' }}>올리기</Text>
           </SendBtn>
         </BtnColumn>

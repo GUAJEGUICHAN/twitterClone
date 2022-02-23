@@ -42,6 +42,72 @@ export async function postSignup({ email, username, password }) {
   return data;
 }
 
+export async function uploadPost({ accessToken, content, images }) {
+  const url = `${BASE_URL}/api/member/posts`;
+
+  const formData = new FormData();
+  formData.append('title', 'title');
+  formData.append('content', content);
+  images.forEach((image) => {
+    const ext = image.uri.split('.').pop();
+    const filename = image.uri.split('/').pop();
+
+    // formData.append('img', {
+    //   name: filename,
+    //   type: `image/${ext}`,
+    //   uri: Platform.OS === 'ios' ? image.uri : image.uri,
+    // });
+    formData.append(
+      'img',
+      {
+        uri: image.uri,
+        name: filename,
+        type: `image/${ext}`,
+      },
+    );
+  });
+  console.log(formData);
+
+  const data = await fetch(url, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'multipart/form-data',
+      Authorization: `Bearer ${accessToken.jwt}`,
+    },
+    body: formData,
+  }).then((res) => {
+    res.json().then((data) => console.log('api', data));
+    return res.json();
+  }).catch((err) => {
+    console.log('err', err);
+    return new Error(err);
+  });
+  return data;
+}
+
+export async function updatePost({ idx, accessToken, content }) {
+  const url = `${BASE_URL}/api/member/posts/${idx}`;
+
+  const formData = new FormData();
+  formData.append('title', 'title');
+  formData.append('content', content);
+
+  const data = await fetch(url, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${accessToken.jwt}`,
+    },
+    body: formData,
+  }).then((res) => res.json()).catch((err) => {
+    console.log(err);
+    return ({ jwt: 'err' });
+  });
+  console.log('edit', data);
+
+  // return data;
+}
+
 export async function deletePost({ idx, accessToken }) {
   const url = `${BASE_URL}/api/member/posts/${idx}`;
 

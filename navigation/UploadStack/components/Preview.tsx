@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components/native';
 import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
@@ -41,36 +41,20 @@ const DelBtn = styled.TouchableOpacity`
   box-shadow: 1px 1px 5px lightgray;
 `;
 
+interface ImageDataProp {
+  cancelled: boolean;
+  height: number;
+  width: number;
+  type: string;
+  uri: string;
+}
 interface PreviewProp {
-  data: {
-    cancelled: boolean;
-    height: number;
-    width: number;
-    type: string;
-    uri: string;
-  };
-  setForm: Function;
-  form: number;
+  images: ImageDataProp[],
+  setImages: Function,
 }
 
-const Preview: React.FC<PreviewProp> = ({ data, setForm, form }) => {
-  const [images, setImages] = useState([]);
-  const [isOne, setIsOne] = useState(false);
-  useEffect(() => {
-    if (data !== null) {
-      setForm(form + 1);
-      setImages([...images, data]);
-    }
-  }, [data]);
-  useEffect(() => {
-    if (images.length === 1) {
-      setIsOne(true);
-    } else if (isOne) {
-      setIsOne(false);
-    }
-  }, [images]);
+function Preview({ images, setImages }: PreviewProp): React.CElement<PreviewProp, any> {
   const removeImage = (index: number) => {
-    setForm(form - 1);
     setImages(images.filter((e, idx) => index !== idx));
   };
 
@@ -79,7 +63,7 @@ const Preview: React.FC<PreviewProp> = ({ data, setForm, form }) => {
       {images.length !== 0 ? (
         <ImageContainer>
           {images.map((e, idx) => (
-            <ImageView isOne={isOne} key={idx}>
+            <ImageView isOne={images.length === 1} key={idx}>
               <ImageWrapper>
                 <ImageInstance
                   style={StyleSheet.absoluteFill}
@@ -99,6 +83,6 @@ const Preview: React.FC<PreviewProp> = ({ data, setForm, form }) => {
       ) : null}
     </Container>
   );
-};
+}
 
-export default Preview;
+export default React.memo(Preview);
