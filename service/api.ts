@@ -49,13 +49,18 @@ export async function uploadPost({ accessToken, content, images }) {
   formData.append('title', 'title');
   formData.append('content', content);
   images.forEach((image) => {
-    formData.append('img',
+    const ext = image.uri.split('.').pop();
+    const filename = image.uri.split('/').pop();
+    formData.append(
+      'img',
       {
         uri: image.uri,
-        name: `photo.png`,
-        type: `image/png`,
-      })
+        name: filename,
+        type: `image/${ext}`,
+      },
+    );
   });
+  console.log(formData);
 
   const data = await fetch(url, {
     method: 'POST',
@@ -64,9 +69,14 @@ export async function uploadPost({ accessToken, content, images }) {
       Authorization: `Bearer ${accessToken.jwt}`,
     },
     body: formData,
-  }).then((res) => (res.json())).catch((err) => {
-    console.log(err);
+  }).then((res) => {
+    res.json().then((data) => console.log('api', data));
+    return res.json();
+  }).catch((err) => {
+    console.log('err', err);
+    return new Error(err);
   });
+  return data;
 }
 
 export async function updatePost({ idx, accessToken, content }) {
