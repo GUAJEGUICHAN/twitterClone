@@ -114,7 +114,7 @@ function Main() {
                 images,
               }).then((msg) => {
                 console.log('msg', msg);
-                if (msg.meesage == undefined) {
+                if (msg.meesage === undefined) {
                   console.log('정상작동');
                   queryClient.refetchQueries(['allPosts']);
                   naviation.goBack();
