@@ -12,11 +12,13 @@ import {
 
 import styled from 'styled-components/native';
 
-import { useQueryClient } from 'react-query';
+import { useInfiniteQuery, useQueryClient } from 'react-query';
 
 import TweetComment from './TweetComment';
 
-import { deletePost, updatePost } from '../../../service/api';
+import {
+  deletePost, getGetCommentsByPost, updatePost, uploadComment,
+} from '../../../service/api';
 
 const ComponentContainer = styled.View`
   display:flex;
@@ -103,7 +105,6 @@ type TweetProps = {
   date: string,
   contentText: string,
   contentImageList: Array<any>,
-  comments: Array<any>,
 }
 
 export default function Tweet({
@@ -113,14 +114,34 @@ export default function Tweet({
   date,
   contentText,
   contentImageList = [],
-  comments,
 }: TweetProps) {
   const [commentToggle, setCommentToggle] = useState(false);
   const [isEditMode, setEditMode] = useState(false);
   const [newContent, setNewContent] = useState(contentText);
+  const [comment, setComment] = useState('');
 
   const queryClient = useQueryClient();
   const ACCESS_TOKEN = queryClient.getQueryData('ACCESS_TOKEN');
+
+  const {
+    data: commentsData = { pages: { commemts: [] } },
+    // data: commentsData,
+    isLoading,
+    refetch: getComments,
+    isRefetching: isRefetchingComments,
+    hasNextPage: hasCommentsNextPage,
+    fetchNextPage: fetchCommentsNextPage,
+  }: any = useInfiniteQuery<any>(
+    [`comments${idx}`],
+    () => getGetCommentsByPost({ idx }),
+    {
+      enabled: false,
+      getNextPageParam: (currentPage) => {
+        const nextPage = currentPage.current_page + 1;
+        return nextPage > currentPage.total_pages ? null : nextPage;
+      },
+    },
+  );
 
   const degree = useRef(new Animated.Value(0)).current;
   const turnedDegree = degree.interpolate({
@@ -132,6 +153,10 @@ export default function Tweet({
   const handleContentChange = useCallback((text: string) => {
     setNewContent(text);
   }, []);
+
+  const handleCommentChange = (text: string) => {
+    setComment(text);
+  };
 
   return (
     <ComponentContainer>
@@ -239,6 +264,7 @@ export default function Tweet({
             }}
             onPress={() => {
               setCommentToggle((prev) => !prev);
+              getComments();
               if (commentToggle) {
                 Animated.spring(degree, { toValue: 0, useNativeDriver: true }).start();
               } else {
@@ -274,16 +300,19 @@ export default function Tweet({
           </CommentHeader>
           {commentToggle ? (
             <TweetCommentContainer>
-              {comments.map(({
-                id, color, name, content,
-              }) => (
-                <TweetComment
-                  key={id}
-                  color={color}
-                  name={name}
-                  content={content}
-                />
-              ))}
+              {isLoading || isRefetchingComments || commentsData === undefined
+                ? (<Text> 로딩중</Text>)
+                : commentsData.pages.map((page) => page.comments).flat().map(({
+                  idx: commentIdx, member, createdAt, content,
+                }) => (
+                  <TweetComment
+                    key={commentIdx}
+                    createdAt={createdAt}
+                    color="black"
+                    name={member.username}
+                    content={content}
+                  />
+                ))}
               <View
                 style={{
                   display: 'flex',
@@ -302,8 +331,23 @@ export default function Tweet({
                     borderRadius: 10,
                     marginRight: 5,
                   }}
+                  value={comment}
+                  onChangeText={handleCommentChange}
                 />
-                <MaterialCommunityIcons name="send-circle" size={20} color="skyblue" />
+                <Pressable onPress={() => {
+                  uploadComment({ idx, comment, accessToken: ACCESS_TOKEN }).then(() => {
+                    setComment('');
+                    getComments();
+                  });
+                }}
+                >
+                  <MaterialCommunityIcons
+                    name="send-circle"
+                    size={20}
+                    color="skyblue"
+                  />
+                </Pressable>
+
               </View>
             </TweetCommentContainer>
           )
