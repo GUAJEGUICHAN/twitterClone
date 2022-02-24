@@ -1,10 +1,10 @@
-import { BASE_URL } from '@env';
+import { BASE_URL } from "@env";
 
 type PostsProps = {
-  posts: Array<any>,
-  total_page: Number,
-  current_page: Number,
-}
+  posts: Array<any>;
+  total_page: Number;
+  current_page: Number;
+};
 
 export async function fetchAllPosts() {
   const url = `${BASE_URL}/api/posts`;
@@ -13,16 +13,33 @@ export async function fetchAllPosts() {
   return data;
 }
 
+export async function fetchMyPosts({ pageParam = 0, queryKey }) {
+  const [_, accessToken] = queryKey;
+  console.log(pageParam);
+  const response = await fetch(
+    `${BASE_URL}/api/member/posts?page=${pageParam}`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken.jwt}`,
+      },
+    }
+  );
+  const data: PostsProps = await response.json();
+  return data;
+}
+
 export async function postLogin({ email, password }) {
   const url = `${BASE_URL}/api/member/authentication`;
 
   const data = await fetch(url, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({ email, password }),
-  }).then((res) => (res.json())).catch(() => ({ jwt: 'err' }));
+  })
+    .then((res) => res.json())
+    .catch(() => ({ jwt: "err" }));
 
   return data;
 }
@@ -31,13 +48,15 @@ export async function postSignup({ email, username, password }) {
   const url = `${BASE_URL}/api/member`;
 
   const data = await fetch(url, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({ email, username, password }),
-  }).then((res) => (res.json())).catch(() => ({ jwt: 'err' }));
-  console.log('postSignup', data);
+  })
+    .then((res) => res.json())
+    .catch(() => ({ jwt: "err" }));
+  console.log("postSignup", data);
 
   return data;
 }
@@ -48,11 +67,13 @@ export async function deletePost({ idx, accessToken }) {
   console.log(idx, accessToken);
 
   await fetch(url, {
-    method: 'DELETE',
+    method: "DELETE",
     headers: {
       Authorization: `Bearer ${accessToken.jwt}`,
     },
-  }).then((res) => (res.json())).catch((err) => {
-    console.log(err);
-  });
+  })
+    .then((res) => res.json())
+    .catch((err) => {
+      console.log(err);
+    });
 }
