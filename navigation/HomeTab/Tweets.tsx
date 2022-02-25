@@ -5,6 +5,7 @@ import { Text, Dimensions, FlatList } from 'react-native';
 import { useInfiniteQuery, useQueryClient } from 'react-query';
 
 import styled from 'styled-components/native';
+
 import { fetchAllPosts } from '../../service/api';
 
 import Tweet from './components/Tweet';
@@ -63,21 +64,6 @@ export default function Tweets() {
 
   const queryClient = useQueryClient();
 
-  const TweetComments = [
-    {
-      id: 1,
-      color: 'red',
-      name: '트럼프',
-      content: '안녕하세요 오바마',
-    },
-    {
-      id: 2,
-      color: 'blue',
-      name: '오바마',
-      content: '안녕하세요 트럼프',
-    },
-  ];
-
   const onRefresh = () => {
     queryClient.refetchQueries(['allPosts']);
   };
@@ -92,16 +78,15 @@ export default function Tweets() {
       username={item.member.username}
       date={item.createdAt}
       contentText={item.content}
-      comments={TweetComments}
       contentImageList={item.postImages}
     />
   );
 
-  function loadMore() {
+  const loadMore = () => {
     if (hasTweetsNextPage) {
       fetchTweetsNextPage();
     }
-  }
+  };
 
   return (
     <Container

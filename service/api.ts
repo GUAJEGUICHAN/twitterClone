@@ -73,11 +73,7 @@ export async function uploadPost({ accessToken, content, images }) {
       Authorization: `Bearer ${accessToken.jwt}`,
     },
     body: formData,
-  }).then((res) => {
-    res.json().then((data) => console.log('api', data));
-
-    return res.json();
-  }).catch((err) => {
+  }).then((res) => (res.json())).catch((err) => {
     console.log('err', err);
 
     return new Error(err);
@@ -121,4 +117,30 @@ export async function deletePost({ idx, accessToken }) {
   }).then((res) => (res.json())).catch((err) => {
     console.log(err);
   });
+}
+
+export async function getGetCommentsByPost({ idx }) {
+  const url = `${BASE_URL}/api/posts/${idx}/comments`;
+
+  const data = await fetch(url).then((res) => (res.json()));
+  console.log('getGetCommentsByPost', data);
+  return data;
+}
+
+export async function uploadComment({ idx, comment, accessToken }) {
+  const url = `${BASE_URL}/api/posts/${idx}/comments`;
+
+  await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken.jwt}`,
+    },
+    body: JSON.stringify({
+      content: comment,
+    }),
+  }).then((res) => (res.json())).catch((err) => {
+    console.log(err);
+  });
+  return 0;
 }

@@ -6,7 +6,8 @@ import styled from 'styled-components/native';
 type TweetCommentProps = {
   color: string,
   name: string,
-  content: string
+  content: string,
+  createdAt: string
 }
 
 const Container = styled.View``;
@@ -33,7 +34,9 @@ const CommentInfo = styled.View`
   margin-bottom:5px;
 `;
 
-export default function TweetComment({ color, name, content }: TweetCommentProps)
+export default function TweetComment({
+  color, name, createdAt, content,
+}: TweetCommentProps)
   : React.FunctionComponentElement<View> {
   return (
     <Container
@@ -68,7 +71,7 @@ export default function TweetComment({ color, name, content }: TweetCommentProps
               {name}
             </UserName>
             <Date>
-              시간날짜
+              {createdAt}
             </Date>
           </CommentInfo>
           <Text>{content}</Text>
