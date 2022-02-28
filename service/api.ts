@@ -82,16 +82,33 @@ export async function uploadPost({ accessToken, content, images }) {
   return data;
 }
 
-export async function updatePost({ idx, accessToken, content }) {
+export async function updatePost({
+  idx, accessToken, content, images,
+}) {
   const url = `${BASE_URL}/api/member/posts/${idx}`;
 
   const formData = new FormData();
   formData.append('title', 'title');
   formData.append('content', content);
 
+  images.map((image) => {
+    console.log('updatePost', image);
+    const ext = image.extension.split('.').pop();
+    const filename = image.url.split('/').pop();
+    console.log('updatePost ext, filename', ext, filename);
+    console.log('', `${BASE_URL}${image.url}`);
+    formData.append('img', {
+      uri: `${BASE_URL}${image.url}`,
+      name: filename,
+      type: `image/${ext}`,
+    });
+  });
+
   const data = await fetch(url, {
     method: 'PUT',
     headers: {
+      Accept: 'application/json',
+      'Content-Type': 'multipart/form-data',
       Authorization: `Bearer ${accessToken.jwt}`,
     },
     body: formData,
@@ -142,5 +159,22 @@ export async function uploadComment({ idx, comment, accessToken }) {
   }).then((res) => (res.json())).catch((err) => {
     console.log(err);
   });
+  return 0;
+}
+
+export async function deleteComment({ commentIdx, accessToken }) {
+  // const url = `${BASE_URL}/api/posts/${idx}/comments`;
+  const url = `${BASE_URL}/api/posts/comments/${commentIdx}`;
+
+  const data = await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken.jwt}`,
+    },
+  }).then((res) => (res.json())).catch((err) => {
+    console.log(err);
+  });
+  console.log(data)
   return 0;
 }
