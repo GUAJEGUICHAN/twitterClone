@@ -1,10 +1,10 @@
-import React from "react";
-import styled from "styled-components/native";
-import { Dimensions, FlatList } from "react-native";
-import Upload from "./components/Upload";
-import { useQuery, useQueryClient } from "react-query";
+import React from 'react';
+import styled from 'styled-components/native';
+import { Dimensions, FlatList } from 'react-native';
+import { useQuery, useQueryClient } from 'react-query';
+import Upload from './components/Upload';
 
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const Container = styled.View`
   position: relative;

@@ -32,7 +32,7 @@ function Upload() {
     >
       <PopupBtn
         onPress={() => {
-          navigation.navigate('Upload', { screen: 'Main' });
+          navigation.navigate('Popup', { screen: 'Main' });
         }}
       >
         <Text>

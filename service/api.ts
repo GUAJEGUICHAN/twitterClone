@@ -6,16 +6,33 @@ type PostsProps = {
   current_page: Number;
 };
 
-export async function fetchAllPosts() {
-  const url = `${BASE_URL}/api/posts`;
-  const response = await fetch(url);
-  const data: PostsProps = await response.json();
+type myInfoProps = {
+  idx: number;
+  email: string;
+  password: string;
+  username: string;
+  image: Object;
+  auth: string;
+  createdAt: Date;
+};
+
+type Image = {
+  uri: string;
+  saveName: string;
+  url: string;
+};
+
+export async function fetchAllPosts({ pageParam = 0 }) {
+  const url = `${BASE_URL}/api/posts?page=${pageParam}`;
+  console.log(url);
+  const data: PostsProps = await fetch(url).then((res) => res.json());
+
   return data;
 }
 
 export async function fetchMyPosts({ pageParam = 0, queryKey }) {
   const [_, accessToken] = queryKey;
-  console.log(pageParam);
+
   const response = await fetch(
     `${BASE_URL}/api/member/posts?page=${pageParam}`,
     {
@@ -25,6 +42,73 @@ export async function fetchMyPosts({ pageParam = 0, queryKey }) {
     }
   );
   const data: PostsProps = await response.json();
+  return data;
+}
+
+const createImage = async (url: string, fileName: string): Promise<File> => {
+  console.log(`https://sign.u-class.co.kr/${url}`);
+  const response = await fetch(`https://sign.u-class.co.kr/${url}`);
+  const data = await response.blob();
+  const metaData = { type: "image/png" };
+  console.log(data);
+  const file = new File([data], fileName, metaData);
+  console.log(file);
+  return file;
+};
+
+export async function updatePost({ idx, accessToken, content, images }) {
+  const url = `${BASE_URL}/api/member/posts/${idx}`;
+
+  const formData = new FormData();
+  formData.append("title", "title");
+  formData.append("content", content);
+  images.forEach(async (image: Image) => {
+    let ext = "";
+    let filename = "";
+
+    if (image.uri) {
+      ext = image.uri.split(".").pop();
+      filename = image.uri.split("/").pop();
+      formData.append("img", {
+        uri: image.uri,
+        name: filename,
+        type: `image/${ext}`,
+      });
+    } else {
+      filename = image.url.split("/").pop();
+
+      const file = await createImage(`${BASE_URL}${image.url}`, filename);
+      console.log({ ...file });
+      formData.append("img", file);
+    }
+  });
+  console.log(content);
+  const data = await fetch(url, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${accessToken.jwt}`,
+    },
+    body: formData,
+  })
+    .then((res) => res.json())
+    .catch((err) => {
+      console.log(err);
+      return { jwt: "err" };
+    });
+
+  return data;
+}
+
+export async function getMyInfo({ queryKey }) {
+  const [_, accessToken] = queryKey;
+  console.log(accessToken);
+
+  const response = await fetch(`${BASE_URL}/api/member/`, {
+    headers: {
+      Authorization: `Bearer ${accessToken.jwt}`,
+    },
+  });
+  const data: myInfoProps = await response.json();
   return data;
 }
 

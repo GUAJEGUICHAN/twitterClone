@@ -13,6 +13,7 @@ import { useQueryClient, useInfiniteQuery } from "react-query";
 import Tweet from "./components/Tweet";
 import Upload from "./components/Upload";
 import { fetchMyPosts } from "../../service/api";
+
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const Container = styled.View`
@@ -132,6 +133,7 @@ export default function UserInfo({ navigation }) {
       contentText={item.content}
       comments={TweetComments}
       contentImageList={item.postImages}
+      member={undefined}
     />
   );
 
