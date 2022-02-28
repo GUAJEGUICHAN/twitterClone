@@ -37,7 +37,7 @@ type PostProps = {
   idx: number,
   title: string,
   content: string,
-  member: { username: string },
+  member: { username: string, image: { url: string } },
   createdAt: string,
   deletedAt: string,
   updatedAt: string,
@@ -68,17 +68,11 @@ export default function Tweets() {
     queryClient.refetchQueries(['allPosts']);
   };
 
-  const refreshing = isRefetchingAllPosts;
-
   const renderItem = ({ item }: { item: PostProps }) => (
     <Tweet
       key={item.idx}
       idx={item.idx}
-      profileImage=""
-      username={item.member.username}
-      date={item.createdAt}
-      contentText={item.content}
-      contentImageList={item.postImages}
+      item={item}
     />
   );
 
@@ -101,7 +95,7 @@ export default function Tweets() {
             style={{
               flex: 1,
             }}
-            refreshing={refreshing}
+            refreshing={isRefetchingAllPosts}
             onRefresh={onRefresh}
             data={tweetData.pages.map((page) => page.posts).flat()}
             renderItem={renderItem}
