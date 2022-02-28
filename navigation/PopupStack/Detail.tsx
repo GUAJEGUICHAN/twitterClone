@@ -93,7 +93,10 @@ function Detail({ route: { params } }) {
   const queryClient = useQueryClient();
 
   const accessToken = queryClient.getQueryData("ACCESS_TOKEN");
-  const myInfo: number = queryClient.getQueryData(["myInfo", accessToken]);
+  const myInfo: { idx: number } = queryClient.getQueryData([
+    "myInfo",
+    accessToken,
+  ]);
 
   const {
     data: post,
