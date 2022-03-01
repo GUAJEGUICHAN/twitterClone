@@ -51,7 +51,7 @@ export default function Tweets() {
     isRefetching: isRefetchingAllPosts,
     hasNextPage: hasTweetsNextPage,
     fetchNextPage: fetchTweetsNextPage,
-  }: any = useInfiniteQuery<any>(['allPosts'], fetchAllPosts, {
+  }: any = useInfiniteQuery<any>(['allPosts', ''], fetchAllPosts, {
     getNextPageParam: (currentPage) => {
       const nextPage = currentPage.current_page + 1;
       return nextPage > currentPage.total_pages ? null : nextPage;
