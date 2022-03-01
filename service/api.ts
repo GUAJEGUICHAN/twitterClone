@@ -161,9 +161,11 @@ export async function getMyInfo({ queryKey }) {
 //     });
 // }
 
-export async function fetchAllPosts({ pageParam = 0 }) {
-  const url = `${BASE_URL}/api/posts?page=${pageParam}`;
+export async function fetchAllPosts({ pageParam = 0, queryKey }) {
+  const [_, query] = queryKey;
 
+  const url = `${BASE_URL}/api/posts?page=${pageParam}&query=${query}`;
+  console.log(url);
   const data: PostsProps = await fetch(url)
     .then((res) => (res.json()));
 
