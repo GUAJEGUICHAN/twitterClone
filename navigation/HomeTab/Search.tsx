@@ -23,9 +23,6 @@ const SearchBar = styled.TextInput`
   margin-bottom: 40px;
 `;
 
-
-
-
 const Footer = styled.View`
   height: 170px;
 `;
@@ -52,9 +49,9 @@ type ImagePostProps = {
 }
 
 export default function Search() {
-  const [query, setQuery] = useState("");
-  const [onSearch,setOnSearch] = useState(false);
-  const [noData,setNoData] = useState(true);
+  const [query, setQuery] = useState('');
+  const [onSearch, setOnSearch] = useState(false);
+  const [noData, setNoData] = useState(true);
   const {
     data,
     isLoading,
@@ -70,20 +67,16 @@ export default function Search() {
 
   });
 
-
-  useEffect(()=>{
-    if(data){
-      if(data.pages[0].total_page==-1){
+  useEffect(() => {
+    if (data) {
+      if (data.pages[0].total_page == -1) {
         setNoData(true);
-      }
-      else{
+      } else {
         setNoData(false);
       }
     }
-  
-  },[data])
+  }, [data]);
 
-  
   const renderItem = ({ item }: { item: Item }) => (
     <Tweet
       key={item.idx}
@@ -102,15 +95,13 @@ export default function Search() {
     <Container>
       <SearchBar
         placeholder="Search Twitter"
-        onChange={({ nativeEvent: { text} })=>{setQuery(text)}}
-        onSubmitEditing={({ nativeEvent: { text} }) => {
-          setQuery(text)
-          query.length!=0&&search();
-
+        onChange={({ nativeEvent: { text } }) => { setQuery(text); }}
+        onSubmitEditing={({ nativeEvent: { text } }) => {
+          setQuery(text);
+          query.length != 0 && search();
         }}
       />
-      
-    
+
       {(isLoading ? (
         <Text> 로딩중</Text>
       ) : (
@@ -119,7 +110,7 @@ export default function Search() {
             flex: 1,
 
           }}
-          data={data&&data.pages.map((page) => page.posts).flat()}
+          data={data && data.pages.map((page) => page.posts).flat()}
           renderItem={renderItem}
           keyExtractor={(item) => `${item.idx}`}
           onEndReached={loadMore}

@@ -3,6 +3,8 @@ import styled from 'styled-components/native';
 import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 
+import { useNavigation } from '@react-navigation/native';
+
 const Container = styled.View``;
 
 const ImageContainer = styled.View`
@@ -16,7 +18,7 @@ const ImageContainer = styled.View`
   margin-top: 10px;
 `;
 
-const ImageView = styled.View<{ isOne: boolean }>`
+const ImageView = styled.TouchableOpacity<{ isOne: boolean }>`
   width: ${(props) => (props.isOne ? '100%' : '50%')};
   height: ${(props) => (props.isOne ? '100%' : '50%')};
   align-items: center;
@@ -52,10 +54,12 @@ interface ImageDataProp {
 interface PreviewProp {
   images: ImageDataProp[],
   setImages: Function,
-  edit:boolean
+  edit:boolean,
 }
 
 function Preview({ images, setImages, edit }: PreviewProp): React.CElement<PreviewProp, any> {
+  const navigation = useNavigation();
+
   const removeImage = (index: number) => {
     setImages(images.filter((e, idx) => index !== idx));
   };
@@ -65,7 +69,19 @@ function Preview({ images, setImages, edit }: PreviewProp): React.CElement<Previ
       {images.length !== 0 ? (
         <ImageContainer>
           {images.map((e, idx) => (
-            <ImageView isOne={images.length === 1} key={idx}>
+            <ImageView
+              isOne={images.length === 1}
+              key={idx}
+              onPress={() => {
+                navigation.navigate('Popup', {
+                  screen: 'View',
+                  params: {
+                    image: e.uri ? e.uri : e.url,
+                    local: !!e.uri,
+                  },
+                });
+              }}
+            >
               <ImageWrapper>
                 <ImageInstance
                   style={StyleSheet.absoluteFill}
