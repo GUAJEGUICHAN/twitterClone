@@ -1,23 +1,52 @@
 import React from 'react';
 
 import { Text, View } from 'react-native';
+import { useQueryClient } from 'react-query';
+
 import styled from 'styled-components/native';
+import { deleteComment } from '../../../service/api';
 
 type TweetCommentProps = {
-  color: string,
-  name: string,
-  content: string
+  commentData: {
+    idx: Number,
+    content: String,
+    createdAt: String,
+    updatedAt: Number,
+    deletedAt: null,
+    member: {
+      idx: Number,
+      email: String,
+      password: String,
+      username: String,
+      image: String,
+      auth: String,
+      createdAt: String
+    },
+  }
+  accessToken: String,
 }
 
-const Container = styled.View``;
+const Container = styled.View`
+  display: flex;
+  flex-direction: row;
+  background-color: lightgray;
+  margin: 5px;
+  border-radius: 5px;
+  padding: 10px;
+`;
 
-const ProfileImageContainer = styled.View``;
+const ProfileImageContainer = styled.View`
+  flex: 1;
+`;
 
-const ContentContainer = styled.View``;
+const ContentContainer = styled.View`
+  flex:7;
+`;
+
 const ProfileImage = styled.View`
-          width: 25px;
-          height: 25px;
-          border-radius:25px;
+  width: 25px;
+  height: 25px;
+  border-radius:25px;
 `;
 
 const UserName = styled.Text`
@@ -33,43 +62,51 @@ const CommentInfo = styled.View`
   margin-bottom:5px;
 `;
 
-export default function TweetComment({ color, name, content }: TweetCommentProps)
+const Close = styled.Pressable`  
+`;
+
+export default function TweetComment(
+  { commentData, accessToken }: TweetCommentProps,
+)
   : React.FunctionComponentElement<View> {
+  const {
+    member: { username }, createdAt, idx, content,
+  } = commentData;
+
+  const queryClient = useQueryClient();
+
   return (
-    <Container
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        backgroundColor: 'lightgray',
-        margin: 5,
-        borderRadius: 5,
-        padding: 10,
-      }}
-    >
-      <ProfileImageContainer
-        style={{
-          flex: 1,
-        }}
-      >
+    <Container>
+      <ProfileImageContainer>
         <ProfileImage
           style={{
-            backgroundColor: color,
+            backgroundColor: 'black',
           }}
         />
       </ProfileImageContainer>
-      <ContentContainer
-        style={{
-          flex: 7,
-        }}
-      >
+      <ContentContainer>
         <View>
           <CommentInfo>
-            <UserName>
-              {name}
-            </UserName>
-            <Date>
-              시간날짜
-            </Date>
+            <View>
+              <UserName>
+                {username}
+              </UserName>
+            </View>
+            <View>
+              <Date>
+                {createdAt}
+              </Date>
+              <Close
+                onPress={async () => {
+                  console.log('삭제!');
+                  await deleteComment({ commentIdx: idx, accessToken }).then(() => {
+                    queryClient.refetchQueries([`comments${idx}`]);
+                  });
+                }}
+              >
+                <Text>❌</Text>
+              </Close>
+            </View>
           </CommentInfo>
           <Text>{content}</Text>
         </View>

@@ -1,20 +1,20 @@
-import React from "react";
+import React from 'react';
 
-import { Text, Dimensions, FlatList } from "react-native";
+import { Text, Dimensions, FlatList } from 'react-native';
 
-import { CommonActions } from "@react-navigation/native";
+import { CommonActions } from '@react-navigation/native';
 
-import styled from "styled-components/native";
+import styled from 'styled-components/native';
 
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
-import { useQueryClient, useInfiniteQuery } from "react-query";
+import { useQueryClient, useInfiniteQuery } from 'react-query';
 
-import Tweet from "./components/Tweet";
-import Upload from "./components/Upload";
-import { fetchMyPosts } from "../../service/api";
+import Tweet from './components/Tweet';
+import Upload from './components/Upload';
+import { fetchMyPosts } from '../../service/api';
 
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const Container = styled.View`
   position: relative;
@@ -80,20 +80,20 @@ type ImagePostProps = {
   createdAt: string;
 };
 
-type PostProps = {
-  idx: number;
-  title: string;
-  content: string;
-  member: { username: string };
-  createdAt: string;
-  deletedAt: string;
-  updatedAt: string;
-  postImages: Array<ImagePostProps>;
-};
+interface Item {
+  idx: number,
+  title: string,
+  content: string,
+  member: { username: string, image: { url: string } },
+  createdAt: string,
+  deletedAt: string,
+  updatedAt: string,
+  postImages: Array<ImagePostProps>
+}
 
 export default function UserInfo({ navigation }) {
   const queryClient = useQueryClient();
-  const ACCESS_TOKEN = queryClient.getQueryData("ACCESS_TOKEN");
+  const ACCESS_TOKEN = queryClient.getQueryData('ACCESS_TOKEN');
 
   const {
     data: myPost,
@@ -101,43 +101,23 @@ export default function UserInfo({ navigation }) {
     isRefetching: isRefetchingMyPosts,
     hasNextPage,
     fetchNextPage,
-  }: any = useInfiniteQuery<any>(["myPosts", ACCESS_TOKEN], fetchMyPosts, {
+  }: any = useInfiniteQuery<any>(['myPosts', ACCESS_TOKEN], fetchMyPosts, {
     getNextPageParam: (currentPage) => {
       const nextPage = currentPage.current_page + 1;
       return nextPage > currentPage.total_pages ? null : nextPage;
     },
   });
 
-  const TweetComments = [
-    {
-      id: 1,
-      color: "red",
-      name: "트럼프",
-      content: "안녕하세요 오바마",
-    },
-    {
-      id: 2,
-      color: "blue",
-      name: "오바마",
-      content: "안녕하세요 트럼프",
-    },
-  ];
-
-  const renderItem = ({ item }: { item: PostProps }) => (
+  const renderItem = ({ item }: { item: Item }) => (
     <Tweet
       key={item.idx}
       idx={item.idx}
-      profileImage=""
-      username={item.member.username}
-      date={item.createdAt}
-      contentText={item.content}
-      comments={TweetComments}
-      contentImageList={item.postImages}
-      member={undefined}
+      item={item}
+
     />
   );
 
-  const onRefresh = () => queryClient.refetchQueries(["myPosts"]);
+  const onRefresh = () => queryClient.refetchQueries(['myPosts']);
 
   const loadMore = () => {
     console.log(hasNextPage);
@@ -151,7 +131,7 @@ export default function UserInfo({ navigation }) {
       <BackGround>
         <Image
           source={{
-            uri: "https://thumbnews.nateimg.co.kr/view610///news.nateimg.co.kr/orgImg/hm/2020/12/11/202012111655103390984_20201211165529_01.jpg",
+            uri: 'https://thumbnews.nateimg.co.kr/view610///news.nateimg.co.kr/orgImg/hm/2020/12/11/202012111655103390984_20201211165529_01.jpg',
           }}
         />
       </BackGround>
@@ -177,19 +157,19 @@ export default function UserInfo({ navigation }) {
         />
       )}
 
-      {/* <BlueButton
+      <BlueButton
         onPress={() => {
-          queryClient.setQueryData("ACCESS_TOKEN", undefined);
+          queryClient.setQueryData('ACCESS_TOKEN', undefined);
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
-              routes: [{ name: "Login" }],
-            })
+              routes: [{ name: 'Login' }],
+            }),
           );
         }}
       >
         <Text>로그아웃</Text>
-      </BlueButton> */}
+      </BlueButton>
       <Upload />
     </Container>
   );

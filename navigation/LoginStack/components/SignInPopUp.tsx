@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import styled from 'styled-components/native';
 import { useQuery, useQueryClient } from 'react-query';
-import { postLogin, getMyInfo } from '../../../service/api';
+import { postLogin } from '../../../service/api';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 

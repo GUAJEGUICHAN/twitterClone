@@ -1,8 +1,6 @@
-import { useNavigation } from '@react-navigation/native';
 import React, { useEffect } from 'react';
 
-import { Text, Dimensions, ImageBackground } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Dimensions, ImageBackground } from 'react-native';
 
 import styled from 'styled-components/native';
 
@@ -13,7 +11,7 @@ const Container = styled.View`
 
   justify-content: center;
 `;
-const Btn = styled.TouchableOpacity``;
+// const Btn = styled.TouchableOpacity``;
 
 // const Image = styled.View<{ image: string }>`
 //   background-image: ${(props) =>
@@ -28,8 +26,9 @@ const Btn = styled.TouchableOpacity``;
 //   image: string;
 // }
 
-function View({ route: { params }, navigation: { setOptions } }) {
-  const navigation = useNavigation();
+function View({ route: { params }, navigation: { setOptions } }
+  : {route:{params:any}, navigation:{setOptions:Function}})
+  : React.ReactElement {
   useEffect(() => {
     setOptions({
       headerLeft: () => null,

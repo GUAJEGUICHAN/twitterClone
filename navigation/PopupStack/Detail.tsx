@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { Keyboard, View, Text } from "react-native";
-import styled from "styled-components/native";
-import { Ionicons } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
-import moment from "moment";
-import { useQueryClient, useQuery } from "react-query";
-import Preview from "./components/Preview";
+import React, { useEffect, useState } from 'react';
+import { Keyboard, Text } from 'react-native';
+import styled from 'styled-components/native';
+import { Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
+import moment from 'moment';
+import { useQueryClient, useQuery } from 'react-query';
+import { useNavigation } from '@react-navigation/native';
+import Preview from './components/Preview';
 
-import { updatePost, deletePost } from "../../service/api";
-import { useNavigation } from "@react-navigation/native";
+import { updatePost, deletePost } from '../../service/api';
+import TweetCommentsContainer from '../HomeTab/components/TweetCommentsContainer';
 
 const Container = styled.View`
   padding: 30px 20px 0 20px;
@@ -63,13 +64,13 @@ const Btn = styled.TouchableOpacity`
 `;
 
 const ImgBtn = styled.TouchableOpacity<{ isDisabled: boolean }>`
-  opacity: ${(props) => (props.isDisabled ? "0.5" : "1")};
+  opacity: ${(props) => (props.isDisabled ? '0.5' : '1')};
 `;
-const SendBtn = styled.TouchableOpacity`
-  padding: 5px 10px;
-  background-color: #6baae8;
-  border-radius: 20px;
-`;
+// const SendBtn = styled.TouchableOpacity`
+//   padding: 5px 10px;
+//   background-color: #6baae8;
+//   border-radius: 20px;
+// `;
 
 const PostInfo = styled.Text`
   color: #000000;
@@ -87,23 +88,25 @@ const PostInfo = styled.Text`
 //   comments: Array<any>;
 // };
 
-function Detail({ route: { params } }) {
+function Detail({ route: { params } } : {route:{params:any}}):React.ReactElement {
   const navigation = useNavigation();
 
   const queryClient = useQueryClient();
 
-  const accessToken = queryClient.getQueryData("ACCESS_TOKEN");
+  const [text, setText] = useState('');
+  const [images, setImages] = useState([]);
+  const [editMode, setEditMode] = useState(false);
+
+  const accessToken:string = queryClient.getQueryData('ACCESS_TOKEN');
   const myInfo: { idx: number } = queryClient.getQueryData([
-    "myInfo",
+    'myInfo',
     accessToken,
   ]);
 
   const {
-    data: post,
-    isLoading,
     refetch,
   }: { data: any; isLoading: boolean; refetch: any } = useQuery<any>(
-    ["updatePost"],
+    ['updatePost'],
     () => {
       updatePost({
         idx: params.idx,
@@ -114,22 +117,16 @@ function Detail({ route: { params } }) {
     },
     {
       enabled: false,
-    }
+    },
   );
 
-  const { data, refetch: deleteThat }: { data: any; refetch: any } =
-    useQuery<any>(
-      ["deletePost"],
-      () => {
-        deletePost({ idx: params.idx, accessToken });
-      },
-      { enabled: false }
-    );
-
-  const [editMode, setEditMode] = useState(false);
-  const [text, setText] = useState("");
-
-  const [images, setImages] = useState([]);
+  const { refetch: deleteThat }: { data: any; refetch: any } = useQuery<any>(
+    ['deletePost'],
+    () => {
+      deletePost({ idx: params.idx, accessToken });
+    },
+    { enabled: false },
+  );
 
   const upload = async () => {
     try {
@@ -149,11 +146,11 @@ function Detail({ route: { params } }) {
   };
 
   useEffect(() => {
-    setImages(params.contentImageList);
+    setImages(params.postImages);
   }, []);
 
   useEffect(() => {
-    setText(params.contentText);
+    setText(params.content);
   }, [params]);
 
   return (
@@ -161,13 +158,13 @@ function Detail({ route: { params } }) {
       <Left>
         <Image
           source={{
-            uri: "https://thumbnews.nateimg.co.kr/view610///news.nateimg.co.kr/orgImg/hm/2020/12/11/202012111655103390984_20201211165529_01.jpg",
+            uri: 'https://thumbnews.nateimg.co.kr/view610///news.nateimg.co.kr/orgImg/hm/2020/12/11/202012111655103390984_20201211165529_01.jpg',
           }}
         />
       </Left>
       <Right>
         <TitleColumn>
-          <Name>{params.username}</Name>
+          <Name>{params.member.username}</Name>
           <BtnMenus>
             {myInfo && params.member ? (
               params.member.idx === myInfo.idx ? (
@@ -178,7 +175,7 @@ function Detail({ route: { params } }) {
                       refetch();
                     }}
                   >
-                    <Text style={{ color: "white" }}>저장</Text>
+                    <Text style={{ color: 'white' }}>저장</Text>
                   </Btn>
                 ) : (
                   <>
@@ -187,7 +184,7 @@ function Detail({ route: { params } }) {
                         setEditMode(true);
                       }}
                     >
-                      <Text style={{ color: "white" }}>수정</Text>
+                      <Text style={{ color: 'white' }}>수정</Text>
                     </Btn>
                     <Btn
                       onPress={() => {
@@ -195,7 +192,7 @@ function Detail({ route: { params } }) {
                         navigation.goBack();
                       }}
                     >
-                      <Text style={{ color: "white" }}>삭제</Text>
+                      <Text style={{ color: 'white' }}>삭제</Text>
                     </Btn>
                   </>
                 )
@@ -211,22 +208,22 @@ function Detail({ route: { params } }) {
           editable={editMode}
           style={{
             height: 200,
-            textAlignVertical: "top",
+            textAlignVertical: 'top',
             borderBottomWidth: 2,
-            borderBottomColor: "#6BAAE8",
+            borderBottomColor: '#6BAAE8',
           }}
           placeholder="글이나 사진을 올려주세요."
           onSubmitEditing={() => {
             Keyboard.dismiss();
           }}
-          onChange={({ nativeEvent: { eventCount, target, text } }) => {
-            setText(text);
+          onChange={({ nativeEvent: { text: newText } }) => {
+            setText(newText);
           }}
           defaultValue={text}
         />
-        <PostInfo>{moment(params.date).format("dddd Do MMMM, YYYY")}</PostInfo>
+        <PostInfo>{moment(params.date).format('dddd Do MMMM, YYYY')}</PostInfo>
 
-        <Preview images={images} setImages={setImages} isItOwn={editMode} />
+        <Preview images={images} setImages={setImages} edit={editMode} />
 
         {myInfo && params.member ? (
           params.member.idx === myInfo.idx ? (
@@ -243,6 +240,11 @@ function Detail({ route: { params } }) {
             )
           ) : null
         ) : null}
+
+        <TweetCommentsContainer
+          idx={params.idx}
+          accessToken={accessToken}
+        />
       </Right>
     </Container>
   );

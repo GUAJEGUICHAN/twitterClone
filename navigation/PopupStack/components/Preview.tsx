@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components/native';
 import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
-
-import { useNavigation } from '@react-navigation/native';
 
 const Container = styled.View``;
 
@@ -18,7 +16,7 @@ const ImageContainer = styled.View`
   margin-top: 10px;
 `;
 
-const ImageView = styled.TouchableOpacity<{ isOne: boolean }>`
+const ImageView = styled.View<{ isOne: boolean }>`
   width: ${(props) => (props.isOne ? '100%' : '50%')};
   height: ${(props) => (props.isOne ? '100%' : '50%')};
   align-items: center;
@@ -43,31 +41,21 @@ const DelBtn = styled.TouchableOpacity`
   box-shadow: 1px 1px 5px lightgray;
 `;
 
-const ShowMeTheImg = styled.TouchableOpacity``;
-
+interface ImageDataProp {
+  cancelled: boolean;
+  height: number;
+  width: number;
+  type: string;
+  uri: string;
+  url:string
+}
 interface PreviewProp {
-  images: any;
-  setImages: Function;
-  isItOwn: boolean;
+  images: ImageDataProp[],
+  setImages: Function,
+  edit:boolean
 }
 
-const Preview: React.FC<PreviewProp> = ({ images, setImages, isItOwn }) => {
-  const [isOne, setIsOne] = useState(false);
-  const [own, setOwn] = useState(false);
-
-  const navigation = useNavigation();
-
-  useEffect(() => {
-    if (images.length === 1) {
-      setIsOne(true);
-    } else if (isOne) {
-      setIsOne(false);
-    }
-  }, [images]);
-
-  useEffect(() => {
-    setOwn(isItOwn);
-  }, [isItOwn]);
+function Preview({ images, setImages, edit }: PreviewProp): React.CElement<PreviewProp, any> {
   const removeImage = (index: number) => {
     setImages(images.filter((e, idx) => index !== idx));
   };
@@ -77,27 +65,13 @@ const Preview: React.FC<PreviewProp> = ({ images, setImages, isItOwn }) => {
       {images.length !== 0 ? (
         <ImageContainer>
           {images.map((e, idx) => (
-            <ImageView
-              isOne={isOne}
-              key={idx}
-              onPress={() => {
-                navigation.navigate('Popup', {
-                  screen: 'View',
-                  params: {
-                    image: e.url ? e.url : e.uri,
-                    local: !e.url,
-                  },
-                });
-              }}
-            >
+            <ImageView isOne={images.length === 1} key={idx}>
               <ImageWrapper>
                 <ImageInstance
                   style={StyleSheet.absoluteFill}
-                  source={{
-                    uri: e.uri || `http://146.56.36.179:8080${e.url}`,
-                  }}
+                  source={{ uri: e.uri ? e.uri : `http://146.56.36.179:8080${e.url}` }}
                 />
-                {own ? (
+                {edit ? (
                   <DelBtn
                     onPress={() => {
                       removeImage(idx);
@@ -106,6 +80,7 @@ const Preview: React.FC<PreviewProp> = ({ images, setImages, isItOwn }) => {
                     <Ionicons size={30} color="black" name="close-circle" />
                   </DelBtn>
                 ) : null}
+
               </ImageWrapper>
             </ImageView>
           ))}
@@ -113,6 +88,6 @@ const Preview: React.FC<PreviewProp> = ({ images, setImages, isItOwn }) => {
       ) : null}
     </Container>
   );
-};
+}
 
-export default Preview;
+export default React.memo(Preview);
