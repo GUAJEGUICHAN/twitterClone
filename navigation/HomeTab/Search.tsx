@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import { Dimensions } from 'react-native';
+
 import Upload from './components/Upload';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -24,6 +25,7 @@ export default function Search() {
   return (
     <Container>
       <SearchBar placeholder="Search Twitter" />
+
       <Upload />
     </Container>
   );

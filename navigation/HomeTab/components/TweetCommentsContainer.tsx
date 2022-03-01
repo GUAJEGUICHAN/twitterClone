@@ -61,8 +61,7 @@ export default function TweetCommentsContainer({ idx, accessToken }: TweetCommen
           />
         </CommentBody>
       )
-        : false
-      }
+        : false}
     </CommentContainer>
   );
 }

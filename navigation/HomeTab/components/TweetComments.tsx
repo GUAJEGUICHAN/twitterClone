@@ -22,7 +22,7 @@ export default function TweetComments({
   isLoading,
   isRefetchingComments,
   commentsData,
-  accessToken
+  accessToken,
 }: TweetCommentsProps): React.ReactElement {
   return (
     <Container>

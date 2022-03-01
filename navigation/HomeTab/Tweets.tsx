@@ -2,11 +2,11 @@ import React from 'react';
 
 import { Text, Dimensions, FlatList } from 'react-native';
 
-import { useInfiniteQuery, useQueryClient } from 'react-query';
+import { useInfiniteQuery, useQuery, useQueryClient } from 'react-query';
 
 import styled from 'styled-components/native';
 
-import { fetchAllPosts } from '../../service/api';
+import { fetchAllPosts, getMyInfo } from '../../service/api';
 
 import Tweet from './components/Tweet';
 import Upload from './components/Upload';
@@ -14,26 +14,26 @@ import Upload from './components/Upload';
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const Container = styled.View`
-  display:flex;
+  display: flex;
   flex-direction: column;
-  position:relative;
-  height:${SCREEN_HEIGHT}px;
-  background-color:white;
+  position: relative;
+  height: ${SCREEN_HEIGHT}px;
+  background-color: white;
 `;
 
 type ImagePostProps = {
-  idx: number,
-  name: string,
-  originalName: string,
-  saveName: string,
-  size: number,
-  uploadPath: string,
-  extension: string,
-  url: string,
-  createdAt: string
-}
+  idx: number;
+  name: string;
+  originalName: string;
+  saveName: string;
+  size: number;
+  uploadPath: string;
+  extension: string;
+  url: string;
+  createdAt: string;
+};
 
-type PostProps = {
+interface Item {
   idx: number,
   title: string,
   content: string,
@@ -51,24 +51,27 @@ export default function Tweets() {
     isRefetching: isRefetchingAllPosts,
     hasNextPage: hasTweetsNextPage,
     fetchNextPage: fetchTweetsNextPage,
-  }: any = useInfiniteQuery<any>(
-    ['allPosts'],
-    fetchAllPosts,
-    {
-      getNextPageParam: (currentPage) => {
-        const nextPage = currentPage.current_page + 1;
-        return nextPage > currentPage.total_pages ? null : nextPage;
-      },
+  }: any = useInfiniteQuery<any>(['allPosts'], fetchAllPosts, {
+    getNextPageParam: (currentPage) => {
+      const nextPage = currentPage.current_page + 1;
+      return nextPage > currentPage.total_pages ? null : nextPage;
     },
-  );
+  });
 
   const queryClient = useQueryClient();
+  const ACCESS_TOKEN = queryClient.getQueryData('ACCESS_TOKEN');
+  useQuery<any>(
+    ['myInfo', ACCESS_TOKEN],
+    getMyInfo,
+  );
 
   const onRefresh = () => {
     queryClient.refetchQueries(['allPosts']);
   };
 
-  const renderItem = ({ item }: { item: PostProps }) => (
+  const refreshing = isRefetchingAllPosts;
+
+  const renderItem = ({ item }: { item: Item }) => (
     <Tweet
       key={item.idx}
       idx={item.idx}
@@ -86,24 +89,26 @@ export default function Tweets() {
     <Container
       style={{
         backgroundColor: 'gray',
+
       }}
     >
-      {isLoading
-        ? (<Text> 로딩중</Text>)
-        : (
-          <FlatList
-            style={{
-              flex: 1,
-            }}
-            refreshing={isRefetchingAllPosts}
-            onRefresh={onRefresh}
-            data={tweetData.pages.map((page) => page.posts).flat()}
-            renderItem={renderItem}
-            keyExtractor={(item) => `${item.idx}`}
-            onEndReached={loadMore}
-            showsVerticalScrollIndicator={false}
-          />
-        )}
+      {isLoading ? (
+        <Text> 로딩중</Text>
+      ) : (
+        <FlatList
+          style={{
+            flex: 1,
+
+          }}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          data={tweetData.pages.map((page) => page.posts).flat()}
+          renderItem={renderItem}
+          keyExtractor={(item) => `${item.idx}`}
+          onEndReached={loadMore}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
       <Upload />
     </Container>
   );

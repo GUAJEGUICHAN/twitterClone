@@ -13,15 +13,15 @@ import { postLogin } from '../../../service/api';
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const Container = styled.View`
-  position:absolute;
-  display:flex;
-  align-items:center;
+  position: absolute;
+  display: flex;
+  align-items: center;
   align-self: center;
   width: 300px;
   height: 250px;
-  background-color:white;
+  background-color: white;
   border-color: black;
-  top:${SCREEN_HEIGHT * 0.3}px;
+  top: ${SCREEN_HEIGHT * 0.3}px;
   z-index: 1;
   border: 1px white;
   border-bottom-color: gray;
@@ -29,21 +29,21 @@ const Container = styled.View`
 `;
 
 const CloseButtonContainer = styled.View`
-  width:${'100%'};
-  padding-top:10px;
-  padding-left:10px;
-  z-index:1;
+  width: ${'100%'};
+  padding-top: 10px;
+  padding-left: 10px;
+  z-index: 1;
 `;
 
 const CloseIcon = styled.Text`
-  font-size:30px;
+  font-size: 30px;
 `;
 
 const LoginButton = styled.TouchableOpacity`
   /* margin-top:-20px;   */
-  width:60px;  
-  background-color:#C4C4C4;
-  padding:10px;
+  width: 60px;
+  background-color: #c4c4c4;
+  padding: 10px;
   /* align-self:flex-end; */
   /* margin-right:20px; */
 
@@ -51,26 +51,26 @@ const LoginButton = styled.TouchableOpacity`
 `;
 
 const LoginText = styled.Text`
-  align-self:center;
+  align-self: center;
 `;
 
 const LogInTitle = styled.Text`
-  position:absolute;
-  margin-top:20px;
-  font-size:30px;
-  font-weight:600;
-  align-self:center;
+  position: absolute;
+  margin-top: 20px;
+  font-size: 30px;
+  font-weight: 600;
+  align-self: center;
 `;
 
 const InputContainer = styled.View`
-  width:${'100%'};
-  margin-top:-25px;
-  padding:30px;
+  width: ${'100%'};
+  margin-top: -25px;
+  padding: 30px;
 `;
 
 const TextInputForSignIn = styled.TextInput`
-  border: 1px  white;
-  border-bottom-color:  #1D9BF0;
+  border: 1px white;
+  border-bottom-color: #1d9bf0;
   /* border-bottom-color: {err ? 'red' : '#1D9BF0'}; */
   height: 40px;
   margin: 12px;
@@ -79,39 +79,49 @@ const TextInputForSignIn = styled.TextInput`
 `;
 
 const Footer = styled.View`
-  width:${'80%'};
-  margin-top:-20px;  
+  width: ${'80%'};
+  margin-top: -20px;
   /* background-color:gray; */
-  display:flex;
-  flex-direction:row;
-  justify-content:space-between;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 `;
 const ErrorMessage = styled.Text`
-  color:red;
+  color: red;
 `;
 
-export default function SignInPopUp({ navigation, closeButton }: any): React.ReactElement {
+export default function SignInPopUp({
+  navigation,
+  closeButton,
+}: any): React.ReactElement {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [err, setErr] = useState(false);
 
   const queryClient = useQueryClient();
 
-  const {
-    data: ACCESS_TOKEN,
-    refetch: getToken,
-  } = useQuery<any>(
+  const { data: ACCESS_TOKEN, refetch: getToken } = useQuery<any>(
     'ACCESS_TOKEN',
     () => postLogin({ email, password }),
     {
       enabled: false,
     },
   );
+
+  // const { data: myInfo, refetch: getInfo } = useQuery<any>(
+  //   ["myInfo", token],
+  //   getMyInfo,
+  //   {
+  //     enabled: false,
+  //   }
+  // );
+
   console.log('ACCESS_TOKEN', ACCESS_TOKEN);
   useEffect(() => {
     if (ACCESS_TOKEN === undefined) {
       return;
-    } if (ACCESS_TOKEN.message !== undefined) {
+    }
+    if (ACCESS_TOKEN.message !== undefined) {
       setErr(true);
       queryClient.setQueryData('ACCESS_TOKEN', undefined);
       setEmail('');
@@ -122,9 +132,7 @@ export default function SignInPopUp({ navigation, closeButton }: any): React.Rea
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
-        routes: [
-          { name: 'Home' },
-        ],
+        routes: [{ name: 'Home' }],
       }),
     );
   });
@@ -140,19 +148,17 @@ export default function SignInPopUp({ navigation, closeButton }: any): React.Rea
   return (
     <Container>
       <CloseButtonContainer>
-        <TouchableOpacity onPress={() => { closeButton(false); }}>
+        <TouchableOpacity
+          onPress={() => {
+            closeButton(false);
+          }}
+        >
           <CloseIcon>
-            <Ionicons
-              color="#788ea4"
-              size={30}
-              name="close"
-            />
+            <Ionicons color="#788ea4" size={30} name="close" />
           </CloseIcon>
         </TouchableOpacity>
       </CloseButtonContainer>
-      <LogInTitle>
-        로그인
-      </LogInTitle>
+      <LogInTitle>로그인</LogInTitle>
       <InputContainer>
         <TextInputForSignIn
           textContentType="emailAddress"
@@ -177,20 +183,19 @@ export default function SignInPopUp({ navigation, closeButton }: any): React.Rea
             borderColor: err ? 'red' : 'white',
             borderBottomColor: err ? 'red' : '#1D9BF0',
           }}
-          onSubmitEditing={() => { getToken(); }}
+          onSubmitEditing={() => {
+            getToken();
+          }}
         />
       </InputContainer>
       <Footer>
-        <ErrorMessage>
-          {err ? '값이 올바르지 않습니다.' : false}
-        </ErrorMessage>
-        <LoginButton onPress={() => {
-          getToken();
-        }}
+        <ErrorMessage>{err ? '값이 올바르지 않습니다.' : false}</ErrorMessage>
+        <LoginButton
+          onPress={async () => {
+            await getToken();
+          }}
         >
-          <LoginText>
-            로그인
-          </LoginText>
+          <LoginText>로그인</LoginText>
         </LoginButton>
       </Footer>
     </Container>

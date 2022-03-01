@@ -34,7 +34,7 @@ interface TweetContainerFooterProps {
   isEditMode: Boolean,
   setEditMode: React.Dispatch<React.SetStateAction<boolean>>,
   newContent: String,
-  accessToken?: String,
+  accessToken: String,
   currentImages: Array<ImagePostProps>,
 }
 

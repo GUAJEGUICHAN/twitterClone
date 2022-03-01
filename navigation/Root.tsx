@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Login from './Login';
 import Home from './Home';
-import Upload from './Upload';
+import Popup from './Popup';
 
 const Nav = createNativeStackNavigator();
 export default function Root() {
@@ -17,7 +17,7 @@ export default function Root() {
     >
       <Nav.Screen name="Login" component={Login} />
       <Nav.Screen name="Home" component={Home} />
-      <Nav.Screen name="Upload" component={Upload} />
+      <Nav.Screen name="Popup" component={Popup} />
     </Nav.Navigator>
   );
 }

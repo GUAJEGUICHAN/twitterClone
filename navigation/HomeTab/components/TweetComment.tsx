@@ -63,13 +63,15 @@ const CommentInfo = styled.View`
 `;
 
 const Close = styled.Pressable`  
-`
+`;
 
 export default function TweetComment(
-  { commentData, accessToken }: TweetCommentProps)
+  { commentData, accessToken }: TweetCommentProps,
+)
   : React.FunctionComponentElement<View> {
-
-  const { member: { username, image }, createdAt, idx, content } = commentData
+  const {
+    member: { username }, createdAt, idx, content,
+  } = commentData;
 
   const queryClient = useQueryClient();
 
@@ -96,10 +98,10 @@ export default function TweetComment(
               </Date>
               <Close
                 onPress={async () => {
-                  console.log('삭제!')
+                  console.log('삭제!');
                   await deleteComment({ commentIdx: idx, accessToken }).then(() => {
-                    queryClient.refetchQueries([`comments${idx}`])
-                  })
+                    queryClient.refetchQueries([`comments${idx}`]);
+                  });
                 }}
               >
                 <Text>❌</Text>
