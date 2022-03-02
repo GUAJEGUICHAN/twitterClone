@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components/native';
+
 import { Dimensions, Text, FlatList } from 'react-native';
 
+import styled from 'styled-components/native';
+
 import { useInfiniteQuery } from 'react-query';
-import Upload from './components/Upload';
+
 import { fetchAllPosts } from '../../service/api';
+
 import Tweet from './components/Tweet';
+import Upload from './components/Upload';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -37,7 +41,9 @@ type ImagePostProps = {
   extension: string;
   url: string;
   createdAt: string;
-};interface Item {
+};
+
+interface Item {
   idx: number,
   title: string,
   content: string,
@@ -50,7 +56,6 @@ type ImagePostProps = {
 
 export default function Search() {
   const [query, setQuery] = useState('');
-  const [onSearch, setOnSearch] = useState(false);
   const [noData, setNoData] = useState(true);
   const {
     data,
@@ -69,7 +74,7 @@ export default function Search() {
 
   useEffect(() => {
     if (data) {
-      if (data.pages[0].total_page == -1) {
+      if (data.pages[0].total_page === -1) {
         setNoData(true);
       } else {
         setNoData(false);
@@ -98,7 +103,7 @@ export default function Search() {
         onChange={({ nativeEvent: { text } }) => { setQuery(text); }}
         onSubmitEditing={({ nativeEvent: { text } }) => {
           setQuery(text);
-          query.length != 0 && search();
+          query.length === 0 && search();
         }}
       />
 
@@ -108,7 +113,6 @@ export default function Search() {
         <FlatList
           style={{
             flex: 1,
-
           }}
           data={data && data.pages.map((page) => page.posts).flat()}
           renderItem={renderItem}

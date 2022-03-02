@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
+
 import { Keyboard, Text } from 'react-native';
+
 import styled from 'styled-components/native';
+
 import { Ionicons } from '@expo/vector-icons';
+
 import * as ImagePicker from 'expo-image-picker';
+
 import moment from 'moment';
 import { useQueryClient, useQuery } from 'react-query';
 import { useNavigation } from '@react-navigation/native';
@@ -88,7 +93,7 @@ const PostInfo = styled.Text`
 //   comments: Array<any>;
 // };
 
-function Detail({ route: { params } } : {route:{params:any}}):React.ReactElement {
+function Detail({ route: { params } }: { route: { params: any } }): React.ReactElement {
   const navigation = useNavigation();
 
   const queryClient = useQueryClient();
@@ -97,7 +102,7 @@ function Detail({ route: { params } } : {route:{params:any}}):React.ReactElement
   const [images, setImages] = useState([]);
   const [editMode, setEditMode] = useState(false);
 
-  const accessToken:string = queryClient.getQueryData('ACCESS_TOKEN');
+  const accessToken: string = queryClient.getQueryData('ACCESS_TOKEN');
   const myInfo: { idx: number } = queryClient.getQueryData([
     'myInfo',
     accessToken,

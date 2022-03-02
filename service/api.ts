@@ -247,7 +247,7 @@ export async function updatePost({
   formData.append('title', 'title');
   formData.append('content', content);
 
-  images.map((image:any) => {
+  images.map((image: any) => {
     let ext = '';
     let filename = '';
     // 새로운 이미지 객체
@@ -327,7 +327,6 @@ export async function uploadComment({ idx, comment, accessToken }) {
 }
 
 export async function deleteComment({ commentIdx, accessToken }) {
-  // const url = `${BASE_URL}/api/posts/${idx}/comments`;
   const url = `${BASE_URL}/api/posts/comments/${commentIdx}`;
 
   const data = await fetch(url, {
