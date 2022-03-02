@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import { Text, View } from 'react-native';
+import { Text, TextInput, View } from 'react-native';
 
 import styled from 'styled-components/native';
 
 import { useQueryClient } from 'react-query';
 
-import { deleteComment } from '../../../service/api';
+import { deleteComment, updateComment } from '../../../service/api';
 
 type TweetCommentProps = {
   commentData: {
@@ -65,7 +65,15 @@ const CommentInfo = styled.View`
   margin-bottom:5px;
 `;
 
-const Close = styled.Pressable`  
+const Remove = styled.Pressable`  
+`;
+
+const Edit = styled.Pressable`
+`;
+
+const HeaderRight = styled.View`
+display:flex;
+flex-direction:row;
 `;
 
 export default function TweetComment(
@@ -76,7 +84,14 @@ export default function TweetComment(
     member: { username }, createdAt, idx, content,
   } = commentData;
 
+  const [isEditMode, setEditMode] = useState(false);
+  const [newComment, setNewComment] = useState(content);
   const queryClient = useQueryClient();
+
+  const handleContentChange = (text: string) => {
+    setNewComment(text);
+    console.log(text);
+  };
 
   return (
     <Container>
@@ -95,25 +110,44 @@ export default function TweetComment(
                 {username}
               </UserName>
             </View>
-            <View>
+            <HeaderRight>
               <Date>
-                {createdAt}
+                {createdAt.split('T')[0]}
               </Date>
-              <Close
+              <Remove
                 onPress={async () => {
-                  console.log('삭제!');
-                  await deleteComment({ commentIdx: idx, accessToken }).then(() => {
-                    queryClient.refetchQueries([`comments${tweetIdx}`]);
-                    console.log(`comments${tweetIdx}`);
-                    console.log(commentData);
-                  });
+                  await deleteComment({ commentIdx: idx, accessToken });
+                  queryClient.refetchQueries([`comments${tweetIdx}`]);
                 }}
               >
                 <Text>❌</Text>
-              </Close>
-            </View>
+              </Remove>
+              <Edit
+                onPress={async () => {
+                  if (isEditMode) {
+                    await updateComment({ commentIdx: idx, content: newComment, accessToken });
+                    queryClient.refetchQueries([`comments${tweetIdx}`]);
+                  }
+                  setEditMode((prev) => !prev);
+                }}
+              >
+                {isEditMode
+                  ? <Text>📀</Text>
+                  : <Text>✏️</Text>}
+              </Edit>
+            </HeaderRight>
           </CommentInfo>
-          <Text>{content}</Text>
+          {isEditMode
+            ? (
+              <TextInput
+                style={{
+                  backgroundColor: 'white',
+                }}
+                value={String(newComment)}
+                onChangeText={handleContentChange}
+              />
+            )
+            : <Text>{content}</Text>}
         </View>
       </ContentContainer>
     </Container>
