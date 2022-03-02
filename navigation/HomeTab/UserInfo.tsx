@@ -12,7 +12,10 @@ import { useQueryClient, useInfiniteQuery } from 'react-query';
 
 import Tweet from './components/Tweet';
 import Upload from './components/Upload';
+import { LargeLoader } from '../components/Loader';
+
 import { fetchMyPosts } from '../../service/api';
+
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -41,8 +44,8 @@ const Image = styled.Image`
 `;
 const BlueButton = styled.TouchableOpacity`
   background-color: #1d9bf0;
-  margin-top: 20px;
-  width: 200px;
+  /* margin-top: 20px; */
+  width: 100px;
   height: 50px;
   font-size: 100px;
   display: flex;
@@ -53,6 +56,10 @@ const BlueButton = styled.TouchableOpacity`
 `;
 
 const Info = styled.View`
+  display:flex;
+  flex-direction:row;
+  justify-content:space-between;
+  align-items:center;
   padding: 20px 25px;
   border-bottom-width: 3px;
   border-bottom-color: #e2e8ec;
@@ -137,10 +144,23 @@ export default function UserInfo({ navigation }) {
       </BackGround>
       <Info>
         <Name>조유리</Name>
+        <BlueButton
+          onPress={() => {
+            queryClient.setQueryData('ACCESS_TOKEN', undefined);
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'Login' }],
+              }),
+            );
+          }}
+        >
+          <Text>로그아웃</Text>
+        </BlueButton>
       </Info>
 
       {isLoading ? (
-        <Text> 로딩중</Text>
+        <LargeLoader />
       ) : (
         <FlatList
           style={{
@@ -157,19 +177,6 @@ export default function UserInfo({ navigation }) {
         />
       )}
 
-      <BlueButton
-        onPress={() => {
-          queryClient.setQueryData('ACCESS_TOKEN', undefined);
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [{ name: 'Login' }],
-            }),
-          );
-        }}
-      >
-        <Text>로그아웃</Text>
-      </BlueButton>
       <Upload />
     </Container>
   );

@@ -2,11 +2,11 @@ import React from 'react';
 
 import styled from 'styled-components/native';
 
-import { Text } from 'react-native';
-
 import { InfiniteData } from 'react-query';
 
 import TweetComment from './TweetComment';
+
+import { SmallLoader } from '../../components/Loader';
 
 const Container = styled.View`
 `;
@@ -29,7 +29,7 @@ export default function TweetComments({
   return (
     <Container>
       {isLoading || isRefetchingComments || commentsData === undefined
-        ? (<Text> 로딩중</Text>)
+        ? (<SmallLoader />)
         : commentsData.pages.map((page) => page.comments).flat().map((commentData) => (
           <TweetComment
             key={commentData.idx}
