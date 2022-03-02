@@ -1,9 +1,11 @@
 import React from 'react';
 
 import { Text, View } from 'react-native';
-import { useQueryClient } from 'react-query';
 
 import styled from 'styled-components/native';
+
+import { useQueryClient } from 'react-query';
+
 import { deleteComment } from '../../../service/api';
 
 type TweetCommentProps = {
@@ -24,6 +26,7 @@ type TweetCommentProps = {
     },
   }
   accessToken: String,
+  tweetIdx: Number
 }
 
 const Container = styled.View`
@@ -66,7 +69,7 @@ const Close = styled.Pressable`
 `;
 
 export default function TweetComment(
-  { commentData, accessToken }: TweetCommentProps,
+  { commentData, accessToken, tweetIdx }: TweetCommentProps,
 )
   : React.FunctionComponentElement<View> {
   const {
@@ -100,7 +103,9 @@ export default function TweetComment(
                 onPress={async () => {
                   console.log('삭제!');
                   await deleteComment({ commentIdx: idx, accessToken }).then(() => {
-                    queryClient.refetchQueries([`comments${idx}`]);
+                    queryClient.refetchQueries([`comments${tweetIdx}`]);
+                    console.log(`comments${tweetIdx}`);
+                    console.log(commentData);
                   });
                 }}
               >

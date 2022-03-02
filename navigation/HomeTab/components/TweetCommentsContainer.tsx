@@ -52,7 +52,7 @@ export default function TweetCommentsContainer({ idx, accessToken }: TweetCommen
             isRefetchingComments={isRefetchingComments}
             commentsData={commentsData}
             accessToken={accessToken}
-
+            tweetIdx={idx}
           />
           <CommentTextInput
             idx={idx}

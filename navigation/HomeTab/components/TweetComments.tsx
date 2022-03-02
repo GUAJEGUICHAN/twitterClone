@@ -15,7 +15,8 @@ interface TweetCommentsProps {
   isLoading: Boolean,
   isRefetchingComments: Boolean,
   commentsData: InfiniteData<any>,
-  accessToken: String
+  accessToken: String,
+  tweetIdx: Number
 }
 
 export default function TweetComments({
@@ -23,6 +24,7 @@ export default function TweetComments({
   isRefetchingComments,
   commentsData,
   accessToken,
+  tweetIdx,
 }: TweetCommentsProps): React.ReactElement {
   return (
     <Container>
@@ -33,6 +35,7 @@ export default function TweetComments({
             key={commentData.idx}
             commentData={commentData}
             accessToken={accessToken}
+            tweetIdx={tweetIdx}
           />
         ))}
     </Container>
