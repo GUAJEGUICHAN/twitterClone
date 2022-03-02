@@ -2,13 +2,15 @@ import React from 'react';
 
 import styled from 'styled-components/native';
 
-import { Text } from 'react-native';
+import { FlatList } from 'react-native';
 
 import { InfiniteData } from 'react-query';
 
 import TweetComment from './TweetComment';
+import { SmallLoader } from '../../components/Loader';
 
 const Container = styled.View`
+  height:400px;
 `;
 
 interface TweetCommentsProps {
@@ -26,18 +28,27 @@ export default function TweetComments({
   accessToken,
   tweetIdx,
 }: TweetCommentsProps): React.ReactElement {
+  const renderItem = ({ item: commentData }) => (
+    <TweetComment
+      key={commentData.idx}
+      commentData={commentData}
+      accessToken={accessToken}
+      tweetIdx={tweetIdx}
+    />
+  );
+
   return (
     <Container>
       {isLoading || isRefetchingComments || commentsData === undefined
-        ? (<Text> 로딩중</Text>)
-        : commentsData.pages.map((page) => page.comments).flat().map((commentData) => (
-          <TweetComment
-            key={commentData.idx}
-            commentData={commentData}
-            accessToken={accessToken}
-            tweetIdx={tweetIdx}
+        ? (<SmallLoader />)
+        : (
+          <FlatList
+            data={commentsData.pages.map((page) => page.comments).flat()}
+            renderItem={renderItem}
+            keyExtractor={(item) => `${item.idx}`}
+            showsVerticalScrollIndicator={false}
           />
-        ))}
+        )}
     </Container>
   );
 }

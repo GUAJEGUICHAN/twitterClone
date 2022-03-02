@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { Dimensions, Text, FlatList } from 'react-native';
+import { Dimensions, FlatList } from 'react-native';
 
 import styled from 'styled-components/native';
 
@@ -10,6 +10,7 @@ import { fetchAllPosts } from '../../service/api';
 
 import Tweet from './components/Tweet';
 import Upload from './components/Upload';
+import { LargeLoader } from '../components/Loader';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -108,7 +109,7 @@ export default function Search() {
       />
 
       {(isLoading ? (
-        <Text> 로딩중</Text>
+        <LargeLoader />
       ) : (
         <FlatList
           style={{

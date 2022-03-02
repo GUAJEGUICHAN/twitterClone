@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Text, Dimensions, FlatList } from 'react-native';
+import { Dimensions, FlatList } from 'react-native';
 
 import { useInfiniteQuery, useQuery, useQueryClient } from 'react-query';
 
@@ -10,6 +10,7 @@ import { fetchAllPosts, getMyInfo } from '../../service/api';
 
 import Tweet from './components/Tweet';
 import Upload from './components/Upload';
+import { LargeLoader } from '../components/Loader';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -93,7 +94,7 @@ export default function Tweets() {
       }}
     >
       {isLoading ? (
-        <Text> 로딩중</Text>
+        <LargeLoader />
       ) : (
         <FlatList
           style={{
