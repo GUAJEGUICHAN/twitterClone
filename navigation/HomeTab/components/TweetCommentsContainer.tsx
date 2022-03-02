@@ -47,17 +47,17 @@ export default function TweetCommentsContainer({ idx, accessToken }: TweetCommen
       <CommentHeader idx={idx} commentToggle={commentToggle} setCommentToggle={setCommentToggle} />
       {commentToggle ? (
         <CommentBody>
+          <CommentTextInput
+            idx={idx}
+            getComments={getComments}
+            accessToken={accessToken}
+          />
           <TweetComments
             isLoading={isLoading}
             isRefetchingComments={isRefetchingComments}
             commentsData={commentsData}
             accessToken={accessToken}
             tweetIdx={idx}
-          />
-          <CommentTextInput
-            idx={idx}
-            getComments={getComments}
-            accessToken={accessToken}
           />
         </CommentBody>
       )

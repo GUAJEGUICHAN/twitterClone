@@ -16,7 +16,6 @@ import { LargeLoader } from '../components/Loader';
 
 import { fetchMyPosts } from '../../service/api';
 
-
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const Container = styled.View`
