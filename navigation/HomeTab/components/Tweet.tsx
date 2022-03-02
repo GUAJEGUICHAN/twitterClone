@@ -92,14 +92,14 @@ export default function Tweet({ idx, item }: TweetProps) {
               newContent={newContent}
               item={item}
             />
-            <TweetContainerFooter
+            {/* <TweetContainerFooter
               idx={idx}
               isEditMode={isEditMode}
               setEditMode={setEditMode}
               newContent={newContent}
               accessToken={ACCESS_TOKEN}
               currentImages={postImages}
-            />
+            /> */}
             <TweetImageContainer
               contentImageList={postImages}
             />
