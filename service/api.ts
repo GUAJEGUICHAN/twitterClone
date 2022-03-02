@@ -341,3 +341,20 @@ export async function deleteComment({ commentIdx, accessToken }) {
   console.log(data);
   return 0;
 }
+
+export async function updateComment({ commentIdx, content, accessToken }) {
+  const url = `${BASE_URL}/api/posts/comments/${commentIdx}`;
+
+  const data = await fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken.jwt}`,
+    },
+    body: JSON.stringify({ content }),
+  }).then((res) => (res.json())).catch((err) => {
+    console.log('ERR??', err);
+  });
+  console.log(data);
+  return 0;
+}
